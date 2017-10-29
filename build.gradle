@@ -19,6 +19,11 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        // DBFlow
+        mavenCentral()
+        maven { url "https://www.jitpack.io" }
+
     }
 }
 
