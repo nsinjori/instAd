@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.foi.air1712.webservice">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>

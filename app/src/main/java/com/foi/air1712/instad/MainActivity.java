@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.webservice.AirWebServiceCaller;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -34,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.test_button)
     public void buttonClicked(View view){
+        //Provjera dal web servisi rade
+        AirWebServiceCaller webServiceCaller = new AirWebServiceCaller();
+        webServiceCaller.getAll("getAll", Dogadaji.class);
+
+
+
         if(SQLite.select().from(Dogadaji.class).queryList().isEmpty()){
             System.out.println("Ovo ide kad je lokalna baza prazna");
             MockPodaci.writeAll();
