@@ -1,5 +1,6 @@
 package com.foi.air1712.webservice;
 
+import com.foi.air1712.core.AirWebServiceHandler;
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.webservice.responses.AirWebServiceResponse;
 import com.google.gson.Gson;
@@ -20,15 +21,19 @@ import retrofit.Retrofit;
 
 public class AirWebServiceCaller {
 
+    AirWebServiceHandler mAirWebServiceHandler;
+
     // retrofit object
     Retrofit retrofit;
     // base URL of the web service
     private final String baseUrl = "http://instad.servebeer.com/InstAd/";
-    //private final String baseUrl = "http://cortex.foi.hr/mtl/courses/air/";
+
 
     // constructor
     //public AirWebServiceCaller(){
-    public AirWebServiceCaller(){
+    //public AirWebServiceCaller(){
+    public AirWebServiceCaller(AirWebServiceHandler airWebServiceHandler){
+        this.mAirWebServiceHandler = airWebServiceHandler;
 
         //To verify what's sending over the network, use Interceptors
         OkHttpClient client = new OkHttpClient();
@@ -70,6 +75,7 @@ public class AirWebServiceCaller {
 
                             if(entityType == Dogadaji.class){
                                 System.out.println("************** dohvaceni dogadaji...");
+                                handleDogadaji(response);
                             } else
                             {
                                 System.out.println("Unrecognized class");
@@ -91,6 +97,25 @@ public class AirWebServiceCaller {
             });
         }else {
             System.out.println("call je null ?????");
+        }
+    }
+
+    //tu ideju metode za dogdaje..
+
+    private void handleDogadaji(Response<AirWebServiceResponse> response) {
+        Gson gson = new Gson();
+        System.out.println("*************************");
+        System.out.println("hmm");
+        System.out.println("*************************");
+        /*
+        Dogadaji[] storeDogadaji2 = gson.fromJson(response.body().getItems().toString(), Dogadaji[].class);
+        */
+        Dogadaji[] storeDogadaji = response.body().getItems();
+        System.out.println("Ovolko ih je: " + storeDogadaji.length);
+        //System.out.println("Ovolko ih je: " + storeDogadaji[0].getObjekt());
+        if(mAirWebServiceHandler != null){
+            mAirWebServiceHandler.onDataArrived(Arrays.asList(storeDogadaji), true, 1316217);
+
         }
     }
 
