@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "642198952499",
+    "firebase_url": "https://instad-f1929.firebaseio.com",
+    "project_id": "instad-f1929",
+    "storage_bucket": "instad-f1929.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642198952499:android:d41a5cbb666c2bad",
+        "android_client_info": {
+          "package_name": "com.foi.air1712.instad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642198952499-3eov9i4apbc04kb6f88cl05mjrlsr7en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_3fKwgpFLeQt8dzW6r1Qtpv-jTrNYQx4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

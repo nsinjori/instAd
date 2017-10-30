@@ -39,3 +39,4 @@ dependencies {
     compile project (':core')
     compile project (':webservice')
 }
+apply plugin: 'com.google.gms.google-services'
