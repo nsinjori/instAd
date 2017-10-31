@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.foi.air1712.instad.accountManagement.SignUpActivity"
+    tools:context="com.foi.air1712.instad.accountManagement.LoginActivity"
     android:orientation="vertical">
-
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -28,7 +27,7 @@
 
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/email_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
@@ -37,7 +36,7 @@
             android:textColor="@android:color/black" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
@@ -47,29 +46,41 @@
             android:textColor="@android:color/black" />
 
         <Button
-            android:id="@+id/sign_up_button"
+            android:id="@+id/sign_in_button"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimary"
-            android:text="@string/action_sign_up_short"
+            android:text="@string/action_sign_in_short"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
+        <Button
+            android:id="@+id/to_sign_up_button"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
 
-        <!-- Link to Login Screen -->
+            android:text="@string/not_registered"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            />
+
+        <!-- Skip login or registration -->
 
         <Button
-            android:id="@+id/back_sign_in_button"
+            android:id="@+id/skip_button"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorAccent"
-            android:text="@string/btn_link_to_login"
+            android:layout_marginTop="45dp"
+            android:background="@color/color_silver"
+            android:text="@string/btn_skip_login"
             android:textColor="@android:color/black"
             android:textSize="15sp" />
     </LinearLayout>
+
 
     <ProgressBar
         android:id="@+id/progressBar"
