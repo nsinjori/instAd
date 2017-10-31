@@ -23,4 +23,10 @@ public class LoginActivity extends AppCompatActivity {
     public void skipButtonClicked(View view){
         startActivity(new Intent(LoginActivity.this, PrikazSvihActivity.class));
     }
+    @OnClick(R.id.to_sign_up_button)
+    public void createAccButtonClicked(View view){
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        startActivity(intent);
+        //finish();
+    }
 }
