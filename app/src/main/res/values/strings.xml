@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">instAd</string>
+    <string name="email">email</string>
+    <string name="hint_password">pass</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="btn_link_to_login">Back</string>
 </resources>
