@@ -12,14 +12,16 @@
 
         <!-- <activity android:name=".MainActivity"> -->
         <activity android:name=".PrikazSvihActivity">
+
+        </activity>
+        <activity android:name=".accountManagement.SignUpActivity" />
+        <activity android:name=".accountManagement.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".accountManagement.SignUpActivity" />
-        <activity android:name=".accountManagement.LoginActivity"></activity>
     </application>
 
 </manifest>
