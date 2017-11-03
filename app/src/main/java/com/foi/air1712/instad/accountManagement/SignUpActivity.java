@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,8 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.password)
     TextView passTextView;
     private FirebaseAuth mAuth;
+    @BindView(R.id.progressBarSignUp)
+    ProgressBar pb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +47,19 @@ public class SignUpActivity extends AppCompatActivity {
         String email = emailTextView.getText().toString().trim();
         String pass = passTextView.getText().toString().trim();
         if(TextUtils.isEmpty(email)||TextUtils.isEmpty(pass)){
-            //TODO: show message about empty fields
+            if(TextUtils.isEmpty(email)){
+                Toast.makeText(SignUpActivity.this,"Email field is empty!",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(SignUpActivity.this,"Password field is empty!",Toast.LENGTH_SHORT).show();
+            }
             return;
         }
+        pb.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
+                    pb.setVisibility(View.GONE);
                     Toast.makeText(SignUpActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
                 }else{
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);

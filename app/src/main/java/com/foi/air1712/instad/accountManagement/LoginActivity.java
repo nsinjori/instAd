@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView emailLTextView;
     @BindView(R.id.password_login) TextView passLTextView;
     private FirebaseAuth mAuth;
+    @BindView(R.id.progressBarLogin)
+    ProgressBar pb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mAuth = FirebaseAuth.getInstance();
         //TODO: check if user already logged in
+
     }
     @OnClick(R.id.skip_button)
     public void skipButtonClicked(View view){
@@ -49,14 +53,20 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailLTextView.getText().toString().trim();
         String pass = passLTextView.getText().toString().trim();
         if(TextUtils.isEmpty(email)||TextUtils.isEmpty(pass)){
-            //TODO: show message about empty fields
+            if(TextUtils.isEmpty(email)){
+                Toast.makeText(LoginActivity.this,"Email field is empty!",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(LoginActivity.this,"Password field is empty!",Toast.LENGTH_SHORT).show();
+            }
             return;
         }
-        //TODO: add progressbar, show/hide
+        pb.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
+                    pb.setVisibility(View.GONE);
                     Toast.makeText(LoginActivity.this, task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
