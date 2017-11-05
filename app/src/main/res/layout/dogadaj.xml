@@ -32,31 +32,31 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/objektcv"
+            android:id="@+id/nazivcv"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textIsSelectable="false"
+            tools:text="Naziv"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/objektcv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textIsSelectable="false"
             tools:text="Objekt"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/opiscv"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:layout_marginBottom="17dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:textIsSelectable="false"
-            tools:text="Opis"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
