@@ -7,4 +7,9 @@
     <string name="btn_skip_login">Skip</string>
     <string name="action_sign_up_short">Sign up</string>
     <string name="not_registered">Create new account here</string>
+
+    <!--za izbornik-->
+    <string name="item_1">Početna</string>
+    <string name="item_2">Favoriti</string>
+    <string name="item_3">Postavke</string>
 </resources>
