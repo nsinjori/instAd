@@ -43,7 +43,7 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
 
         List<Dogadaji> dogadaji;
 
-    PrikazSvihAdapter(List<Dogadaji> dogadaji){
+    public PrikazSvihAdapter(List<Dogadaji> dogadaji){
             this.dogadaji = dogadaji;
         }
 
