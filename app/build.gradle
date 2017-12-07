@@ -37,6 +37,14 @@ dependencies {
 
     compile 'com.google.firebase:firebase-auth:10.0.1'
 
+    //za bottombar
+    compile 'com.android.support:design:26.1.0'
+
+    compile 'com.android.support:appcompat-v7:26.1.0'
+
+    compile 'com.android.support:support-v4:26.1.0'
+    //kraj
+
     compile project(':database')
     compile project(':core')
     compile project(':webservice')
