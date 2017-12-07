@@ -1,5 +1,13 @@
 package com.foi.air1712.instad;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +18,9 @@ import android.widget.Toast;
 import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.instad.fragmenti.PrikazFavoritiFragment;
+import com.foi.air1712.instad.fragmenti.PrikazPostavkeFragment;
+import com.foi.air1712.instad.fragmenti.PrikazSvihFragment;
 import com.foi.air1712.instad.loaders.DbDataLoader;
 import com.foi.air1712.instad.loaders.WsDataLoader;
 import com.foi.air1712.webservice.AirWebServiceCaller;
@@ -24,68 +35,44 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//public class MainActivity extends AppCompatActivity {
-public class MainActivity extends AppCompatActivity implements DataLoadedListener {
-
-        @BindView(R.id.events_list)
-    ListView mListView;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.navigation);
 
-        ButterKnife.bind(this);
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Fragment selectedFragment = null;
+                        switch (item.getItemId()) {
+                            case R.id.action_item1:
+                                selectedFragment = PrikazSvihFragment.newInstance();
+                                break;
+                            case R.id.action_item2:
+                                selectedFragment = PrikazFavoritiFragment.newInstance();
+                                break;
+                            case R.id.action_item3:
+                                selectedFragment = PrikazPostavkeFragment.newInstance();
+                                break;
+                        }
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_layout, selectedFragment);
+                        transaction.commit();
+                        return true;
+                    }
+                });
 
-        FlowManager.init(new FlowConfig.Builder(this).build());
-    }
+        //Manually displaying the first fragment - one time only
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, PrikazSvihFragment.newInstance());
+        transaction.commit();
 
-    @OnClick(R.id.test_button)
-    public void buttonClicked(View view){
-        /*
-        //Provjera dal web servisi rade
-        AirWebServiceCaller webServiceCaller = new AirWebServiceCaller();
-        webServiceCaller.getAll("getAll", Dogadaji.class);
-
-
-
-        if(SQLite.select().from(Dogadaji.class).queryList().isEmpty()){
-            System.out.println("Ovo ide kad je lokalna baza prazna");
-            MockPodaci.writeAll();
-        }
-
-        final List<Dogadaji> dogadaji = SQLite.select().from(Dogadaji.class).queryList();
-        String[] listItems = new String[dogadaji.size()];
-        for(int i = 0; i < dogadaji.size(); i++){
-            listItems[i] = dogadaji.get(i).getObjekt();
-        }
-
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems);
-        mListView.setAdapter(adapter);*/
-
-        DataLoader dataLoader;
-        if(Dogadaji.getAll().isEmpty()){
-            System.out.println("Dohvacanje s weba");
-            Toast.makeText(this, "Z neta uzimam", Toast.LENGTH_SHORT).show();
-            dataLoader = new WsDataLoader();
-        } else {
-            System.out.println("Dohvacanje lokalno");
-            Toast.makeText(this, "Lokalno uzimam", Toast.LENGTH_SHORT).show();
-            dataLoader = new DbDataLoader();
-        }
-        dataLoader.loadData(this);
-    }
-
-    @Override
-    public void onDataLoaded(ArrayList<Dogadaji> dogadaji) {
-        System.out.println("Data is here... ");
-        String[] listItems = new String[dogadaji.size()];
-
-        for (int i = 0; i < dogadaji.size(); i++) {
-            listItems[i] = dogadaji.get(i).getObjekt();
-        }
-
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems);
-        mListView.setAdapter(adapter);
+        //Used to select an item programmatically
+        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
     }
 }
