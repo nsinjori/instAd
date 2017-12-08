@@ -35,7 +35,9 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.firebase:firebase-auth:10.2.0'
+    compile 'com.google.firebase:firebase-core:10.2.0'
+
 
     //za bottombar
     compile 'com.android.support:design:26.1.0'

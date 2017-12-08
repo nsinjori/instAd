@@ -44,16 +44,17 @@
         android:layout_below="@id/name_group"
         android:padding="5px"
         >
-    <TextView
+    <EditText
         android:id="@+id/user_mail_info"
         android:hint="@string/user_mail_info"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:inputType="text"
         android:maxLines="1"
         android:textColor="@android:color/black"
         android:enabled="false"
+        android:layout_alignParentLeft="true"
         />
         <Button
             android:layout_width="wrap_content"
