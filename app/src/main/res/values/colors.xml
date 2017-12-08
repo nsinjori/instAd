@@ -6,4 +6,6 @@
     <color name="white">#FFFFFF</color>
     <color name="white_trans">#99FFFFFF</color>
     <color name="color_silver">#C0C0C0</color>
+    <color name="color_lightred">#f44336</color>
+    <color name="color_lightgreen">#8bc34a</color>
 </resources>

@@ -12,4 +12,10 @@
     <string name="item_1">Početna</string>
     <string name="item_2">Favoriti</string>
     <string name="item_3">Postavke</string>
+    <string name="btn_logout">Logout</string>
+    <string name="user_diplay_name">Noname</string>
+    <string name="user_mail_info">Email address</string>
+    <string name="edit_name_text">Edit</string>
+    <string name="btn_discard">Discard changes</string>
+    <string name="btn_save_chng">Save</string>
 </resources>
