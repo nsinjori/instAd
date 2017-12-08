@@ -1,5 +1,6 @@
 package com.foi.air1712.instad;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -18,12 +19,14 @@ import android.widget.Toast;
 import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.instad.accountManagement.LoginActivity;
 import com.foi.air1712.instad.fragmenti.PrikazFavoritiFragment;
 import com.foi.air1712.instad.fragmenti.PrikazPostavkeFragment;
 import com.foi.air1712.instad.fragmenti.PrikazSvihFragment;
 import com.foi.air1712.instad.loaders.DbDataLoader;
 import com.foi.air1712.instad.loaders.WsDataLoader;
 import com.foi.air1712.webservice.AirWebServiceCaller;
+import com.google.firebase.auth.FirebaseAuth;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -43,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
-
+        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener
                 (new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
