@@ -35,8 +35,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         mAuth = FirebaseAuth.getInstance();
-        //TODO: check if user already logged in
-
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
     @OnClick(R.id.skip_button)
     public void skipButtonClicked(View view){
