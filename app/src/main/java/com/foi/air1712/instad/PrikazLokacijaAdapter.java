@@ -56,6 +56,13 @@ public class PrikazLokacijaAdapter extends RecyclerView.Adapter<PrikazLokacijaAd
         holder.adresa.setText(adresaLokacije);
         //ovisno o tome jel prati ili ne se bude mjenjala slika, sad tak
         holder.slika.setImageResource(R.drawable.heart_full);
+
+        holder.slika.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    holder.slika.setImageResource(R.drawable.heart_blank);
+            }
+        });
     }
 
     @Override
