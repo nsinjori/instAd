@@ -130,6 +130,7 @@ public class PrikazPostavkeFragment extends Fragment {
                             }
                         });
                     }else{
+                        pb.setVisibility(View.INVISIBLE);
                         Toast.makeText(getActivity(),"Saving failed! Empty field", Toast.LENGTH_SHORT).show();
                         if(currentUser.getDisplayName()!=null)
                         nameEditText.setText(currentUser.getDisplayName());
@@ -220,15 +221,17 @@ public class PrikazPostavkeFragment extends Fragment {
                                     }else{
                                         //nie dobra stara sifra
                                         pb.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(getActivity(),"Reauthentication failed! Wtong current pass!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(),"Reauthentication failed! Wrong current pass!", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                         }else {
                             //pass i conf se ne poklapaju
+                            pb.setVisibility(View.INVISIBLE);
                             Toast.makeText(getActivity(),"Saving failed! New password and confirm password are not equal!", Toast.LENGTH_SHORT).show();
                         }
                     }else{
+                        pb.setVisibility(View.INVISIBLE);
                         Toast.makeText(getActivity(),"Saving failed! Empty fields!", Toast.LENGTH_SHORT).show();
                     }
                     editOldPassword.setText("");
