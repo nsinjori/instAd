@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.foi.air1712.database.Lokacije;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +22,20 @@ import java.util.List;
 public class PrikazLokacijaAdapter extends RecyclerView.Adapter<PrikazLokacijaAdapter.LokacijaViewHolder>{
     private final List<Lokacije> lokacije;
     private final Context context;
+    List<String> favoriti;
 
     public PrikazLokacijaAdapter(List<Lokacije> lokacije, Context context) {
         this.lokacije = lokacije;
         this.context = context;
+        favoriti = ucitajPodatke();
+    }
+
+    private List<String> ucitajPodatke() {
+        List<String> podatki = new ArrayList<>();
+        podatki.add("Bard Varaždin");
+        podatki.add("Aerodrom Varaždin");
+
+        return podatki;
     }
 
     public static class LokacijaViewHolder extends RecyclerView.ViewHolder{
@@ -54,13 +65,23 @@ public class PrikazLokacijaAdapter extends RecyclerView.Adapter<PrikazLokacijaAd
         String adresaLokacije = lokacije.get(position).getAdresa();
         holder.naziv.setText(nazivLokacije);
         holder.adresa.setText(adresaLokacije);
-        //ovisno o tome jel prati ili ne se bude mjenjala slika, sad tak
-        holder.slika.setImageResource(R.drawable.heart_full);
+        if (favoriti.contains(nazivLokacije)){
+            holder.slika.setImageResource(R.drawable.heart_full);
+        }else
+            holder.slika.setImageResource(R.drawable.heart_blank);
 
         holder.slika.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String naziv = holder.naziv.getText().toString();
+                if (favoriti.contains(naziv)){
+                    favoriti.remove(naziv);
                     holder.slika.setImageResource(R.drawable.heart_blank);
+                }else{
+                    holder.slika.setImageResource(R.drawable.heart_full);
+                    favoriti.add(naziv);
+                }
+
             }
         });
     }
