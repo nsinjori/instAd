@@ -18,4 +18,8 @@
     <string name="edit_name_text">Edit</string>
     <string name="btn_discard">Discard changes</string>
     <string name="btn_save_chng">Save</string>
+    <string name="old_user_pass">Current password</string>
+    <string name="change_pass_btn_text">Change password</string>
+    <string name="new_user_pass_text">New password</string>
+    <string name="confirm_user_pass_text">Confirm password</string>
 </resources>

@@ -17,18 +17,18 @@
         android:layout_height="wrap_content"
 
         android:id="@+id/name_group">
-    <EditText
-        android:id="@+id/user_diplay_name"
-        android:hint="@string/user_diplay_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textColor="@android:color/black"
-        android:enabled="false"
-        android:layout_alignParentLeft="true"
-        />
+
+        <EditText
+            android:id="@+id/user_diplay_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:hint="@string/user_diplay_name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@android:color/black" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,63 @@
             android:layout_alignParentRight="true"
             style="?android:textAppearanceSmall"/>
     </RelativeLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_margin="6dp"
+        android:layout_height="2dp"
+        android:background="@color/color_vlgreen"
+        android:layout_below="@id/mail_group"
+        android:id="@+id/hline1"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pass_group"
+        android:layout_below="@id/hline1"
+        android:padding="5px"
+        >
+        <EditText
+            android:id="@+id/old_pass"
+            android:hint="@string/old_user_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:enabled="false"
+            />
+        <EditText
+            android:id="@+id/new_pass"
+            android:hint="@string/new_user_pass_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:enabled="false"
+            android:layout_below="@id/old_pass"
+            />
+        <EditText
+            android:id="@+id/confirm_pass"
+            android:hint="@string/confirm_user_pass_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:enabled="false"
+            android:layout_below="@id/new_pass"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/change_pass_btn"
+            android:text="@string/change_pass_btn_text"
+            style="?android:textAppearanceSmall"
+            android:layout_below="@id/confirm_pass"/>
+    </RelativeLayout>
     <Button
         android:id="@+id/logout_button"
         style="?android:textAppearanceSmall"
