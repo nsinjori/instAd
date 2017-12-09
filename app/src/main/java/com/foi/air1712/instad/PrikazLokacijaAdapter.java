@@ -11,31 +11,60 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.foi.air1712.database.Lokacije;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Darko on 9.12.2017..
  */
-
 public class PrikazLokacijaAdapter extends RecyclerView.Adapter<PrikazLokacijaAdapter.LokacijaViewHolder>{
     private final List<Lokacije> lokacije;
     private final Context context;
-    List<String> favoriti;
+    List<String> favoriti = new LinkedList<>();
 
     public PrikazLokacijaAdapter(List<Lokacije> lokacije, Context context) {
         this.lokacije = lokacije;
         this.context = context;
-        favoriti = ucitajPodatke();
+        ucitajPodatke();
     }
 
-    private List<String> ucitajPodatke() {
-        List<String> podatki = new ArrayList<>();
-        podatki.add("Bard Varaždin");
-        podatki.add("Aerodrom Varaždin");
+    void ucitajPodatke() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        DatabaseReference ref = database.getReference("users").child(firebaseAuth.getCurrentUser().getUid()).child("favs");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot!=null) {
+                    Map<String, String> mapData = (Map) snapshot.getValue();
+                    if(mapData!=null) {
+                        for (Map.Entry<String, String> entry : mapData.entrySet()) {
+                            String fav = entry.getKey().toString();
+                            if (!favoriti.contains(fav))
+                                favoriti.add(fav);
+                        }
+                    }
+                    notifyDataSetChanged();
+                }else{
+                    System.out.println("Nema favorita!");
+                }
 
-        return podatki;
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
+            }
+
+        });
     }
 
     public static class LokacijaViewHolder extends RecyclerView.ViewHolder{
@@ -73,13 +102,17 @@ public class PrikazLokacijaAdapter extends RecyclerView.Adapter<PrikazLokacijaAd
         holder.slika.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference rf = database.getReference();
                 String naziv = holder.naziv.getText().toString();
                 if (favoriti.contains(naziv)){
                     favoriti.remove(naziv);
                     holder.slika.setImageResource(R.drawable.heart_blank);
+                    rf.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("favs").child(naziv).removeValue();
                 }else{
                     holder.slika.setImageResource(R.drawable.heart_full);
                     favoriti.add(naziv);
+                    rf.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("favs").child(naziv).setValue("dodan");
                 }
 
             }
