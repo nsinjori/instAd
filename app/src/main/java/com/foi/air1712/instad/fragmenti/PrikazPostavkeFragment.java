@@ -54,6 +54,8 @@ public class PrikazPostavkeFragment extends Fragment {
     private EditText editConfirmPass;
     private Button changePassBtn;
     private boolean editPasswordActive = false;
+    private Button editEmailBtn;
+    private boolean editEmailActive = false;
 
     public static PrikazPostavkeFragment newInstance() {
         PrikazPostavkeFragment fragment = new PrikazPostavkeFragment();
@@ -128,6 +130,7 @@ public class PrikazPostavkeFragment extends Fragment {
                             }
                         });
                     }else{
+                        pb.setVisibility(View.INVISIBLE);
                         Toast.makeText(getActivity(),"Saving failed! Empty field", Toast.LENGTH_SHORT).show();
                         if(currentUser.getDisplayName()!=null)
                         nameEditText.setText(currentUser.getDisplayName());
@@ -136,6 +139,43 @@ public class PrikazPostavkeFragment extends Fragment {
                     nameEditText.setEnabled(false);
                     editNameBtn.setText("Edit");
                     editDNameActive = false;
+                }
+
+            }
+        });
+        //edit user email address
+        editEmailBtn = (Button) view.findViewById(R.id.edit_mail_btn);
+        editEmailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = userEmail.getText().toString();
+                if (!editEmailActive) {
+                    userEmail.setEnabled(true);
+                    editEmailBtn.setText("Save");
+                    editEmailActive = true;
+                }else{
+                    pb.setVisibility(View.VISIBLE);
+                    if(!Objects.equals(email, "")){
+                        currentUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                pb.setVisibility(View.INVISIBLE);
+                                if(!task.isSuccessful()){
+                                    Toast.makeText(getActivity(),"Saving failed! "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getActivity(),"User email updated!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }else{
+                        pb.setVisibility(View.INVISIBLE);
+                        Toast.makeText(getActivity(),"Saving failed! Empty field!", Toast.LENGTH_SHORT).show();
+                        userEmail.setText(currentUser.getEmail());
+                    }
+
+                    userEmail.setEnabled(false);
+                    editEmailBtn.setText("Edit");
+                    editEmailActive = false;
                 }
 
             }
@@ -181,15 +221,17 @@ public class PrikazPostavkeFragment extends Fragment {
                                     }else{
                                         //nie dobra stara sifra
                                         pb.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(getActivity(),"Reauthentication failed! Wtong current pass!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(),"Reauthentication failed! Wrong current pass!", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                         }else {
                             //pass i conf se ne poklapaju
+                            pb.setVisibility(View.INVISIBLE);
                             Toast.makeText(getActivity(),"Saving failed! New password and confirm password are not equal!", Toast.LENGTH_SHORT).show();
                         }
                     }else{
+                        pb.setVisibility(View.INVISIBLE);
                         Toast.makeText(getActivity(),"Saving failed! Empty fields!", Toast.LENGTH_SHORT).show();
                     }
                     editOldPassword.setText("");
