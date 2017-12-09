@@ -2,11 +2,20 @@ package com.foi.air1712.webservice;
 
 import com.foi.air1712.core.AirWebServiceHandler;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 import com.foi.air1712.webservice.responses.AirWebServiceResponse;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import retrofit.Call;
@@ -23,10 +32,16 @@ public class AirWebServiceCaller {
 
     AirWebServiceHandler mAirWebServiceHandler;
 
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
+    private ArrayList<Dogadaji> DohvaceniDogadaji2 = new ArrayList<Dogadaji>();
+    private ArrayList<Lokacije> DohvaceneLokacije = new ArrayList<Lokacije>();
+
     // retrofit object
     Retrofit retrofit;
     // base URL of the web service
-    private final String baseUrl = "http://instad.servebeer.com/InstAd/";
+    private final String baseUrl = "https://instad-f1929.firebaseio.com/";
+    //private final String baseUrl = "http://instad.servebeer.com/InstAd/";
 
 
     // constructor
@@ -75,7 +90,14 @@ public class AirWebServiceCaller {
 
                             if(entityType == Dogadaji.class){
                                 System.out.println("************** dohvaceni dogadaji...");
-                                handleDogadaji(response);
+                                //handleDogadaji(response);
+                                dajDogadaje();
+                                //dajLokacije();
+                            }
+                            else if(entityType == Lokacije.class){
+                                System.out.println("************** dohvacene lokacije...");
+                                //handleDogadaji(response);
+                                dajLokacije();
                             } else
                             {
                                 System.out.println("Unrecognized class");
@@ -117,6 +139,87 @@ public class AirWebServiceCaller {
             mAirWebServiceHandler.onDataArrived(Arrays.asList(storeDogadaji), true, 1316217);
 
         }
+    }
+
+
+
+
+
+
+
+    private void dajDogadaje(){
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("dogadaji");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("Imamo " + snapshot.getChildrenCount() + " dogadaja dohvacenih");
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Dogadaji dogadaj = postSnapshot.getValue(Dogadaji.class);
+                    System.out.println(dogadaj.getHash() + " - " + dogadaj.getNaziv());
+                    System.out.println(dogadaj);
+                    System.out.println("kaj se tu desava");
+                    DohvaceniDogadaji2.add(dogadaj);
+                }
+                System.out.println("nekaj ih ima");
+                System.out.println(DohvaceniDogadaji2.size());
+                //initializeAdapter();
+
+                if(mAirWebServiceHandler != null){
+                    mAirWebServiceHandler.onDataArrived(DohvaceniDogadaji2, true, 1316217);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
+            }
+
+        });
+
+
+
+    }
+
+
+    private void dajLokacije(){
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("lokacije");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("Imamo " + snapshot.getChildrenCount() + " lokacija dohvacenih");
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Lokacije lokacije = postSnapshot.getValue(Lokacije.class);
+                    System.out.println(lokacije.getNaziv() + " - " + lokacije.getLatitude());
+                    System.out.println(lokacije);
+                    System.out.println("kaj se tu desava");
+                    DohvaceneLokacije.add(lokacije);
+                }
+                System.out.println("nekaj ih ima");
+                System.out.println(DohvaceneLokacije.size());
+                //initializeAdapter();
+
+                if(mAirWebServiceHandler != null){
+                    mAirWebServiceHandler.onDataArrived(DohvaceneLokacije, true, 1316217);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
+            }
+
+        });
+
+
+
     }
 
 

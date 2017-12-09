@@ -1,6 +1,7 @@
 package com.foi.air1712.core;
 
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public abstract class DataLoader {
 
     public ArrayList<Dogadaji> dogadaji;
+    public ArrayList<Lokacije> lokacije;
 
     protected DataLoadedListener mDataLoadedListener;
 
@@ -19,7 +21,7 @@ public abstract class DataLoader {
     }
 
     public boolean dataLoaded(){
-        if(dogadaji == null){
+        if(dogadaji == null || lokacije == null){
             return false;
         }
         else{

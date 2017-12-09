@@ -4,6 +4,7 @@ import com.foi.air1712.core.AirWebServiceHandler;
 import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 import com.foi.air1712.webservice.AirWebServiceCaller;
 
 import java.util.ArrayList;
@@ -15,13 +16,16 @@ import java.util.List;
 
 public class WsDataLoader extends DataLoader {
     private boolean dogadajiArrived = false;
+    private boolean lokacijeArrived = false;
 
     @Override
     public void loadData(DataLoadedListener dataLoadedListener) {
         super.loadData(dataLoadedListener);
 
         AirWebServiceCaller dogadajiWs = new AirWebServiceCaller(dogadajiHandler);
+        AirWebServiceCaller lokacijeWs = new AirWebServiceCaller(lokacijeHandler);
         dogadajiWs.getAll("getAll", Dogadaji.class);
+        lokacijeWs.getAll("getAll", Lokacije.class);
 
 
     }
@@ -42,10 +46,27 @@ public class WsDataLoader extends DataLoader {
         }
     };
 
+    AirWebServiceHandler lokacijeHandler = new AirWebServiceHandler() {
+        @Override
+        public void onDataArrived(Object result, boolean ok, long timestamp) {
+
+            System.out.println("Ovde je lokacija klasa: " + result.getClass());
+            if(ok){
+                List<Lokacije> lokacije = (List<Lokacije>) result;
+                for(Lokacije lokacijeulisti : lokacije){
+                    lokacijeulisti.save();
+                }
+                lokacijeArrived = true;
+                checkDataArrival();
+            }
+        }
+    };
+
 
     private void checkDataArrival(){
-        if(dogadajiArrived){
-            mDataLoadedListener.onDataLoaded((ArrayList<Dogadaji>) Dogadaji.getAll());
+        if(dogadajiArrived && lokacijeArrived){
+            //mDataLoadedListener.onDataLoaded((ArrayList<Dogadaji>) Dogadaji.getAll());
+            mDataLoadedListener.onDataLoaded((ArrayList<Dogadaji>) Dogadaji.getAll(), (ArrayList<Lokacije>) Lokacije.getAll());
         }
     }
 }

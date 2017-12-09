@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 import com.foi.air1712.instad.loaders.DbDataLoader;
 import com.foi.air1712.instad.loaders.WsDataLoader;
 import com.raizlabs.android.dbflow.config.FlowConfig;
@@ -56,7 +57,7 @@ public class PrikazSvihActivity extends AppCompatActivity implements DataLoadedL
 
 
     @Override
-    public void onDataLoaded(ArrayList<Dogadaji> dogadaji) {
+    public void onDataLoaded(ArrayList<Dogadaji> dogadaji, ArrayList<Lokacije> lokacije) {
         DohvaceniDogadaji = dogadaji;
 
         System.out.println("Data is here... ");

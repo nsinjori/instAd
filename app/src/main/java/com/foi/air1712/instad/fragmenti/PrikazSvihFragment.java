@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 import com.foi.air1712.instad.PrikazSvihAdapter;
 import com.foi.air1712.instad.R;
 import com.foi.air1712.instad.loaders.DbDataLoader;
@@ -19,6 +20,7 @@ import com.foi.air1712.instad.loaders.WsDataLoader;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +32,7 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
 
     private RecyclerView rv;
     private ArrayList<Dogadaji> DohvaceniDogadaji;
+    private ArrayList<Lokacije> dohvaceneLokacije;
 
     public static PrikazSvihFragment newInstance() {
         PrikazSvihFragment fragment = new PrikazSvihFragment();
@@ -79,9 +82,12 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
     }
 
     @Override
-    public void onDataLoaded(ArrayList<Dogadaji> dogadaji) {
+    public void onDataLoaded(ArrayList<Dogadaji> dogadaji, ArrayList<Lokacije> lokacije) {
         DohvaceniDogadaji = dogadaji;
+        dohvaceneLokacije = lokacije;   
         initializeAdapter();
+
+        System.out.println("Dohvacene lokacije z baze/firebase --> " + dohvaceneLokacije.size());
 
     }
 

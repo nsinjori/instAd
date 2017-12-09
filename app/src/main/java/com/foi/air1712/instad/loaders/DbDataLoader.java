@@ -3,6 +3,7 @@ package com.foi.air1712.instad.loaders;
 import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 
 import java.util.ArrayList;
 
@@ -16,8 +17,9 @@ public class DbDataLoader extends DataLoader {
         super.loadData(dataLoadedListener);
         try{
             dogadaji = (ArrayList<Dogadaji>) Dogadaji.getAll();
+            lokacije = (ArrayList<Lokacije>) Lokacije.getAll();
 
-            mDataLoadedListener.onDataLoaded(dogadaji);
+            mDataLoadedListener.onDataLoaded(dogadaji, lokacije);
 
         }catch (NullPointerException e){
             e.printStackTrace();

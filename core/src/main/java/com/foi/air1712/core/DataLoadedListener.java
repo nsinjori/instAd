@@ -1,7 +1,9 @@
 package com.foi.air1712.core;
 
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.Lokacije;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -9,5 +11,5 @@ import java.util.ArrayList;
  */
 
 public interface DataLoadedListener {
-    void onDataLoaded(ArrayList<Dogadaji> dogadaji);
+    void onDataLoaded(ArrayList<Dogadaji> dogadaji, ArrayList<Lokacije> lokacije);
 }
