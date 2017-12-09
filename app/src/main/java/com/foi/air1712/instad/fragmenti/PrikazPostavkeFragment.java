@@ -22,6 +22,9 @@ import com.foi.air1712.instad.accountManagement.LoginActivity;
 import com.google.android.gms.internal.zzaap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -46,6 +49,11 @@ public class PrikazPostavkeFragment extends Fragment {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     Activity act;
     private boolean editDNameActive = false;
+    private EditText editOldPassword;
+    private EditText editNewPassword;
+    private EditText editConfirmPass;
+    private Button changePassBtn;
+    private boolean editPasswordActive = false;
 
     public static PrikazPostavkeFragment newInstance() {
         PrikazPostavkeFragment fragment = new PrikazPostavkeFragment();
@@ -91,7 +99,6 @@ public class PrikazPostavkeFragment extends Fragment {
         });
         //edit user Display Name
         editNameBtn = (Button) view.findViewById(R.id.edit_name_btn);
-
         editNameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +136,70 @@ public class PrikazPostavkeFragment extends Fragment {
                     nameEditText.setEnabled(false);
                     editNameBtn.setText("Edit");
                     editDNameActive = false;
+                }
+
+            }
+        });
+        //change password
+        editOldPassword = (EditText) view.findViewById(R.id.old_pass);
+        editNewPassword = (EditText) view.findViewById(R.id.new_pass);
+        editConfirmPass = (EditText) view.findViewById(R.id.confirm_pass);
+        changePassBtn = (Button) view.findViewById(R.id.change_pass_btn);
+        changePassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String oldPass = editOldPassword.getText().toString();
+                final String newPass = editNewPassword.getText().toString();
+                String confPass = editConfirmPass.getText().toString();
+                if (!editPasswordActive) {
+                    editOldPassword.setEnabled(true);
+                    editNewPassword.setEnabled(true);
+                    editConfirmPass.setEnabled(true);
+                    changePassBtn.setText("Save new password");
+                    editPasswordActive = true;
+                }else{
+                    pb.setVisibility(View.VISIBLE);
+                    if(!Objects.equals(oldPass, "")&&!Objects.equals(newPass,"")&&!Objects.equals(confPass,"")){
+                        if(Objects.equals(newPass,confPass)){
+                            AuthCredential authCredential = EmailAuthProvider.getCredential(currentUser.getEmail(),oldPass);
+                            currentUser.reauthenticate(authCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        currentUser.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                pb.setVisibility(View.INVISIBLE);
+                                                if(task.isSuccessful()){
+                                                    Toast.makeText(getActivity(),"New password is saved!", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    //nije uspjela zamjena lozinke
+                                                    Toast.makeText(getActivity(),"Saving failed! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }else{
+                                        //nie dobra stara sifra
+                                        pb.setVisibility(View.INVISIBLE);
+                                        Toast.makeText(getActivity(),"Reauthentication failed! Wtong current pass!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }else {
+                            //pass i conf se ne poklapaju
+                            Toast.makeText(getActivity(),"Saving failed! New password and confirm password are not equal!", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(getActivity(),"Saving failed! Empty fields!", Toast.LENGTH_SHORT).show();
+                    }
+                    editOldPassword.setText("");
+                    editNewPassword.setText("");
+                    editConfirmPass.setText("");
+                    editOldPassword.setEnabled(false);
+                    editNewPassword.setEnabled(false);
+                    editConfirmPass.setEnabled(false);
+                    changePassBtn.setText("Change password");
+                    editPasswordActive = false;
                 }
 
             }
