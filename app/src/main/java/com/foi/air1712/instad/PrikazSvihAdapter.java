@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.fragmenti.DetaljniPrikazFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -105,31 +106,35 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
             dogadajArrayList.add(dogadaji.get(i));
 
 
+            //System.out.println("A je prijavljeni? -->" + FirebaseAuth.getInstance().getCurrentUser());
+
+            if(FirebaseAuth.getInstance().getCurrentUser() != null){
+                dogadajViewHolder.cv.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,
+                                "Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
+
+                        AppCompatActivity activity = (AppCompatActivity) context;
+                        Fragment detaljniDogadaj = new DetaljniPrikazFragment();
+                        Bundle bundle = new Bundle();
+                        activity.getSupportFragmentManager().beginTransaction();
+                        bundle.putParcelableArrayList("event", dogadajArrayList);
 
 
+                        detaljniDogadaj.setArguments(bundle);
 
-            dogadajViewHolder.cv.setOnClickListener(new View.OnClickListener(){
+                        activity.getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.frame_layout, detaljniDogadaj).commit();
+                        //activity.getSupportFragmentManager().beginTransaction().
 
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context,
-                            "Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
-
-                    AppCompatActivity activity = (AppCompatActivity) context;
-                    Fragment detaljniDogadaj = new DetaljniPrikazFragment();
-                    Bundle bundle = new Bundle();
-                    activity.getSupportFragmentManager().beginTransaction();
-                    bundle.putParcelableArrayList("event", dogadajArrayList);
-
-
-                    detaljniDogadaj.setArguments(bundle);
-
-                    activity.getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.frame_layout, detaljniDogadaj).commit();
-                    //activity.getSupportFragmentManager().beginTransaction().
-
-                }
-            });
+                    }
+                });
+            }
         }
+
+
+
 
         @Override
         public int getItemCount() {
