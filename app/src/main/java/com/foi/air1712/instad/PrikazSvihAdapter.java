@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.instad.fragmenti.DetaljniPrikazFragment;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -113,7 +114,19 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
                 public void onClick(View v) {
                     Toast.makeText(context,
                             "Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
-                    
+
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    Fragment detaljniDogadaj = new DetaljniPrikazFragment();
+                    Bundle bundle = new Bundle();
+                    activity.getSupportFragmentManager().beginTransaction();
+                    bundle.putParcelableArrayList("event", dogadajArrayList);
+
+
+                    detaljniDogadaj.setArguments(bundle);
+
+                    activity.getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.frame_layout, detaljniDogadaj).commit();
+                    //activity.getSupportFragmentManager().beginTransaction().
+
                 }
             });
         }
