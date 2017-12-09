@@ -78,7 +78,7 @@ public class PrikazSvihActivity extends AppCompatActivity implements DataLoadedL
     }
 
     private void initializeAdapter(){
-        PrikazSvihAdapter adapter = new PrikazSvihAdapter(DohvaceniDogadaji);
+        PrikazSvihAdapter adapter = new PrikazSvihAdapter(DohvaceniDogadaji, getApplicationContext());
         rv.setAdapter(adapter);
     }
 }

@@ -92,7 +92,7 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
     }
 
     private void initializeAdapter(){
-        PrikazSvihAdapter adapter = new PrikazSvihAdapter(DohvaceniDogadaji);
+        PrikazSvihAdapter adapter = new PrikazSvihAdapter(DohvaceniDogadaji, getContext());
         rv.setAdapter(adapter);
     }
 }

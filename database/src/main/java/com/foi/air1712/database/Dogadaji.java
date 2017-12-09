@@ -1,5 +1,8 @@
 package com.foi.air1712.database;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -13,7 +16,7 @@ import java.util.List;
  */
 
 @Table(database = MainDatabase.class)
-public class Dogadaji extends BaseModel {
+public class Dogadaji extends BaseModel implements Parcelable {
 
     @PrimaryKey(autoincrement = true)
     @Column
@@ -60,6 +63,34 @@ public class Dogadaji extends BaseModel {
         this.url = url;
         this.datum_pocetka = datum_pocetka;
     }
+
+    protected Dogadaji(Parcel in) {
+        id = in.readInt();
+        adresa = in.readString();
+        naziv = in.readString();
+        hash = in.readString();
+        slika = in.readString();
+        opis = in.readString();
+        longitude = in.readString();
+        latitude = in.readString();
+        datum_kraj = in.readString();
+        ajdi = in.readInt();
+        objekt = in.readString();
+        url = in.readString();
+        datum_pocetka = in.readString();
+    }
+
+    public static final Parcelable.Creator<Dogadaji> CREATOR = new Parcelable.Creator<Dogadaji>() {
+        @Override
+        public Dogadaji createFromParcel(Parcel in) {
+            return new Dogadaji(in);
+        }
+
+        @Override
+        public Dogadaji[] newArray(int size) {
+            return new Dogadaji[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -173,5 +204,44 @@ public class Dogadaji extends BaseModel {
     public String toString()
     {
         return "ClassPojo [adresa = "+adresa+", naziv = "+naziv+", hash = "+hash+", slika = "+slika+", opis = "+opis+", longitude = "+longitude+", latitude = "+latitude+", datum_kraj = "+datum_kraj+", ajdi = "+ajdi+", objekt = "+objekt+", url = "+url+", datum_pocetka = "+datum_pocetka+"]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(adresa);
+        dest.writeString(naziv);
+        dest.writeString(hash);
+        dest.writeString(slika);
+        dest.writeString(opis);
+        dest.writeString(longitude);
+        dest.writeString(latitude);
+        dest.writeString(datum_kraj);
+        dest.writeString(datum_pocetka);
+        dest.writeString(objekt);
+        dest.writeString(url);
+        dest.writeInt(ajdi);
+
+    }
+
+    public void readFromParcel(Parcel parcel) {
+        this.adresa = parcel.readString();
+        this.naziv = parcel.readString();
+        this.hash = parcel.readString();
+        this.slika = parcel.readString();
+        this.opis = parcel.readString();
+        this.longitude = parcel.readString();
+        this.latitude = parcel.readString();
+        this.datum_kraj = parcel.readString();
+        this.datum_pocetka = parcel.readString();
+        this.objekt = parcel.readString();
+        this.url = parcel.readString();
+        this.ajdi = parcel.readInt();
+
     }
 }
