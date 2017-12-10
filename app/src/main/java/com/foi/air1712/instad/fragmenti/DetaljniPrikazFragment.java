@@ -1,12 +1,15 @@
 package com.foi.air1712.instad.fragmenti;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,6 +48,8 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
     private com.google.android.gms.maps.MapFragment mapFragment;
     private GoogleMap map = null;
 
+    private Button uputeKarta;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +61,8 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
         dogadajOpis=(TextView)rootView.findViewById(R.id.dogadaj_opis);
         dogadajDatumP=(TextView)rootView.findViewById(R.id.dogadaj_datump);
         dogadajDatumK=(TextView)rootView.findViewById(R.id.dogadaj_datumk);
+
+        uputeKarta=(Button)rootView.findViewById(R.id.btn_upute);
 
         Bundle bundle = getArguments();
         ArrayList<Dogadaji> listaDohvacena = bundle.getParcelableArrayList("event");
@@ -78,6 +85,17 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
         getActivity().getFragmentManager().beginTransaction().add(R.id.mapa_prikaz, mapFragment).commit();
 
         mapaPrikaz.setFocusable(true);
+
+        uputeKarta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.google.com/maps/dir/?api=1&destination="+dogadajDohvacen.getLatitude()+","+dogadajDohvacen.getLongitude();
+
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
 
         return rootView;
@@ -123,4 +141,6 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
         CameraPosition cameraPosition = new CameraPosition.Builder().target(dogadajKoordinate).zoom(15).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+
+
 }

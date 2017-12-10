@@ -89,6 +89,18 @@
             android:fontFamily="serif"
             android:clickable="true" />
 
+        <Button
+            android:id="@+id/btn_upute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upute do objekta"
+
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            />
+
+
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -103,7 +115,12 @@
 
             </FrameLayout>
 
+
+
+
         </RelativeLayout>
+
+
 
     </LinearLayout>
 
