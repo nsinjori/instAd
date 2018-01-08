@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/toolbar"
+    android:id="@+id/skrolanje">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/dogadaj_slika"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/dogadaj_datump"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@+id/dogadaj_slika"
+            android:textIsSelectable="true"
+            tools:text="Datum pocetka"
+            android:textSize="16sp"
+            android:textColor="?android:textColorPrimaryDisableOnly"
+            android:fontFamily="serif"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/dogadaj_datumk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+
+            android:textIsSelectable="true"
+            tools:text="Datum kraj"
+            android:textSize="16sp"
+            android:textColor="?android:textColorPrimaryDisableOnly"
+            android:fontFamily="serif"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/dogadaj_naziv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@+id/dogadaj_slika"
+            android:textIsSelectable="true"
+            tools:text="Naziv dogadaja"
+            android:textSize="20sp"
+            android:textColor="?android:textColorPrimaryDisableOnly"
+            android:fontFamily="serif"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/dogadaj_opis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@+id/dogadaj_naziv"
+            android:textIsSelectable="true"
+            tools:text="Opis dogadaja"
+            android:textSize="15sp"
+            android:textColor="?android:textColorPrimaryDisableOnly"
+            android:fontFamily="serif"
+            android:clickable="true" />
+
+        <Button
+            android:id="@+id/btn_upute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upute do objekta"
+
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            />
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/mapa_prikaz"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true">
+
+            </FrameLayout>
+
+
+
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+</ScrollView>
