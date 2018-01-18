@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.database.MyItem;
 import com.foi.air1712.instad.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,19 +26,34 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Nikola on 18.1.2018..
  */
 
-public class PrikazMapaFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class PrikazMapaFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,
+        ClusterManager.OnClusterClickListener<MyItem>, ClusterManager.OnClusterInfoWindowClickListener<MyItem>,
+        ClusterManager.OnClusterItemClickListener<MyItem>, ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>{
+
     LocationRequest mLocationRequest;
     Location mLastLocation;
     Marker mCurrLocationMarker;
 
 
+    //za dohvacanje dogadaja//
+    List<Dogadaji> sviDogadaji = null;
+    private ClusterManager<MyItem> mClusterManager;
+    private MyItem clickedClusterItem;
 
     //////
 
@@ -63,6 +80,9 @@ public class PrikazMapaFragment extends Fragment implements OnMapReadyCallback, 
 
         View rootView = inflater.inflate(R.layout.map_fragment, container, false);
         context = rootView.getContext();
+
+        sviDogadaji = Dogadaji.dajSveAzuriraneDogadaje();
+        System.out.println("122131 dohvaceni - " + sviDogadaji.size());
 
         mapFragment = new com.google.android.gms.maps.MapFragment();
         mapFragment.getMapAsync(this);
@@ -93,13 +113,13 @@ public class PrikazMapaFragment extends Fragment implements OnMapReadyCallback, 
             map.getUiSettings().setZoomControlsEnabled(true);
         }
 
-
+        pokreniCluster(map);
         //map.setInfoWindowAdapter(new detaljniInfoWindow());
 
 
     }
 
-    private void buildGoogleApiClient() {
+    private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -156,5 +176,120 @@ public class PrikazMapaFragment extends Fragment implements OnMapReadyCallback, 
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<MyItem> cluster) {
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (ClusterItem item : cluster.getItems()) {
+            builder.include(item.getPosition());
+        }
+        final LatLngBounds bounds = builder.build();
+
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("koordinate:  " + bounds);
+
+        return true;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<MyItem> cluster) {
+
+    }
+
+    @Override
+    public boolean onClusterItemClick(MyItem myItem) {
+        clickedClusterItem = myItem;
+        System.out.println(myItem.getTitle());
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(MyItem myItem) {
+
+    }
+    
+    /** aaaaaaaaaa **/
+    private void pokreniCluster(GoogleMap map) {
+
+        mClusterManager = new ClusterManager<MyItem>(context, map);
+        //mClusterManager.setRenderer(new PersonRenderer());
+        //mClusterManager.setRenderer(new MarkerInfo(context, map, mClusterManager));
+        map.setOnCameraIdleListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+        map.setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+        map.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+        map.setOnInfoWindowClickListener(mClusterManager);
+
+        popuniCluster();
+        mClusterManager.cluster();
+    }
+
+    private void popuniCluster() {
+
+        ArrayList<LatLng> spremljeneKoordinate = new ArrayList<>();
+        spremljeneKoordinate.add(new LatLng(1.0,1.0));
+
+        for (final Dogadaji dogadaj : sviDogadaji) {
+            String dogadajLat = dogadaj.getLatitude();
+            String dogadajLon = dogadaj.getLongitude();
+            LatLng izracunato;
+            LatLng dogadajKoordinate;
+
+            if(dogadajLat.contentEquals("nema") || dogadajLon.contentEquals("nema")){continue;}
+            else{
+                do{
+                    double dogadajLatitude = Double.parseDouble(dogadajLat);
+                    double dogadajLongitude = Double.parseDouble(dogadajLon);
+                    dogadajKoordinate = new LatLng(dogadajLatitude, dogadajLongitude);
+
+                    izracunato = izracunajOffset(dogadajLatitude, dogadajLongitude);
+                    spremljeneKoordinate.add(izracunato);
+                }while(!spremljeneKoordinate.contains(izracunato));
+
+                mClusterManager.addItem(new MyItem(izracunato, dogadaj));
+
+            }
+
+        }
+
+    }
+
+
+    private LatLng izracunajOffset(double lat, double lon){
+        //gotov algoritam//
+        //Earth’s radius, sphere
+        double R = 6378137;
+
+        Random rand = new Random();
+        double n = rand.nextInt(50);
+
+        Random rando = new Random();
+        double n1 = rando.nextInt(50);
+
+        //offsets in meters
+        double dn = n;
+        double de = n1;
+
+        //Coordinate offsets in radians
+        double dLat = dn/R;
+        double dLon = de/(R*Math.cos(Math.PI*lat/180));
+
+        //OffsetPosition, decimal degrees
+        double noviLat = lat + dLat * 180/Math.PI;
+        double noviLon = lon + dLon * 180/Math.PI;
+
+        LatLng vrati = new LatLng(noviLat, noviLon);
+        return vrati;
     }
 }
