@@ -141,4 +141,11 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
             return dogadaji.size();
         }
 
-    }
+        public void obrisiSveDogadaje() {
+            dogadaji.clear();
+            notifyDataSetChanged();
+
+        }
+
+
+}

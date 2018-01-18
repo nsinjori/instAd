@@ -15,8 +15,13 @@ import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -34,7 +39,7 @@ public class AirWebServiceCaller {
 
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
-    private ArrayList<Dogadaji> DohvaceniDogadaji2 = new ArrayList<Dogadaji>();
+    private ArrayList<Dogadaji> DohvaceniDogadaji = new ArrayList<Dogadaji>();
     private ArrayList<Lokacije> DohvaceneLokacije = new ArrayList<Lokacije>();
 
     // retrofit object
@@ -161,14 +166,34 @@ public class AirWebServiceCaller {
                     System.out.println(dogadaj.getHash() + " - " + dogadaj.getNaziv());
                     System.out.println(dogadaj);
                     System.out.println("kaj se tu desava");
-                    DohvaceniDogadaji2.add(dogadaj);
+
+                    /** proba za datume da ih ne uzima ak su stari
+                    String dtStart = dogadaj.getDatum_pocetka();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date();
+                    try {
+                        date = format.parse(dtStart);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Date danas = new Date();
+
+                    if(!date.before(danas)){
+                        DohvaceniDogadaji2.add(dogadaj);
+                    }
+                    /** kraj provjere datum **/
+
+                    DohvaceniDogadaji.add(dogadaj);
+
+
+
                 }
                 System.out.println("nekaj ih ima");
-                System.out.println(DohvaceniDogadaji2.size());
+                System.out.println(DohvaceniDogadaji.size());
                 //initializeAdapter();
 
                 if(mAirWebServiceHandler != null){
-                    mAirWebServiceHandler.onDataArrived(DohvaceniDogadaji2, true, 1316217);
+                    mAirWebServiceHandler.onDataArrived(DohvaceniDogadaji, true, 1316217);
 
                 }
             }
