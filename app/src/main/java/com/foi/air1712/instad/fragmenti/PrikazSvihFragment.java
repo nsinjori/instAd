@@ -146,6 +146,7 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
 
     public void obrisiDohvati(){
         Dogadaji.deleteAllDogadaji();
+        Lokacije.deleteAllLokacije();
         DohvaceniDogadaji.clear();
         rv.setAdapter(null);
         //Toast.makeText(getActivity(),"Briseeem", Toast.LENGTH_SHORT).show();
