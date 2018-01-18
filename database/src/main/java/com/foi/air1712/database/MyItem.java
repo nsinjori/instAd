@@ -51,4 +51,8 @@ public class MyItem implements ClusterItem {
         return objekt;
     }
 
+    public Dogadaji getDogadaj(){
+        return dohvacenDogadaj;
+    }
+
 }
