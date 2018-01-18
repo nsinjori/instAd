@@ -1,6 +1,7 @@
 package com.foi.air1712.instad.fragmenti;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +44,8 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
     private ArrayList<Dogadaji> DohvaceniDogadaji;
     private ArrayList<Lokacije> dohvaceneLokacije;
 
+    private FloatingActionButton fab;
+
     public static PrikazSvihFragment newInstance() {
         PrikazSvihFragment fragment = new PrikazSvihFragment();
         return fragment;
@@ -61,6 +64,16 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
         View rootView =  inflater.inflate(R.layout.fragment_prikaz_svih, container, false);
 
         FlowManager.init(new FlowConfig.Builder(this.getContext()).build());
+
+        //fob za mapu
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"gumbek za mapu", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //za pull to refresh
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
