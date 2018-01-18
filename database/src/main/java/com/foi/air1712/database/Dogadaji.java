@@ -12,6 +12,10 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -201,6 +205,29 @@ public class Dogadaji extends BaseModel implements Parcelable {
 
     public static List<Dogadaji> getAll(){
         return SQLite.select().from(Dogadaji.class).queryList();
+    }
+
+    public static ArrayList<Dogadaji> dajSveAzuriraneDogadaje(){
+        ArrayList<Dogadaji> dohvaceni = new ArrayList<Dogadaji>();
+
+        for(Dogadaji dogadaj : SQLite.select().from(Dogadaji.class).queryList()){
+            /** proba za datume da ih ne uzima ak su stari**/
+            String dtStart = dogadaj.getDatum_kraj();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            try {
+                date = format.parse(dtStart);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Date danas = new Date();
+
+            if(!date.before(danas)){
+                dohvaceni.add(dogadaj);
+            }
+            /** kraj provjere datum **/
+        }
+        return dohvaceni;
     }
 
     public static void deleteAllDogadaji(){
