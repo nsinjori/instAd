@@ -1,11 +1,14 @@
 package com.foi.air1712.database;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -198,6 +201,11 @@ public class Dogadaji extends BaseModel implements Parcelable {
 
     public static List<Dogadaji> getAll(){
         return SQLite.select().from(Dogadaji.class).queryList();
+    }
+
+    public static void deleteAllDogadaji(){
+        Delete.table(Dogadaji.class);
+
     }
 
     @Override
