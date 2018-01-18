@@ -3,6 +3,7 @@ package com.foi.air1712.instad.fragmenti;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,6 +73,8 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(),"gumbek za mapu", Toast.LENGTH_SHORT).show();
+
+                zamijeniFragmente();
             }
         });
 
@@ -171,5 +174,13 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
 
         //swipeContainer.setRefreshing(false);
 
+    }
+
+    private void zamijeniFragmente(){
+        PrikazMapaFragment newMapaFragment = new PrikazMapaFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, newMapaFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
