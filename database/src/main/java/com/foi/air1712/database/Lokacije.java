@@ -3,6 +3,7 @@ package com.foi.air1712.database;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -81,6 +82,11 @@ public class Lokacije extends BaseModel {
 
     public static List<Lokacije> getAll(){
         return SQLite.select().from(Lokacije.class).queryList();
+    }
+
+    public static void deleteAllLokacije(){
+        Delete.table(Lokacije.class);
+
     }
 
     @Override
