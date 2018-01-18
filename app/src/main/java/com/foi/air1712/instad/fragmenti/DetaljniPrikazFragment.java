@@ -49,6 +49,7 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
     private GoogleMap map = null;
 
     private Button uputeKarta;
+    private Button webLink;
 
     @Nullable
     @Override
@@ -63,6 +64,7 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
         dogadajDatumK=(TextView)rootView.findViewById(R.id.dogadaj_datumk);
 
         uputeKarta=(Button)rootView.findViewById(R.id.btn_upute);
+        webLink=(Button)rootView.findViewById(R.id.btn_web);
 
         Bundle bundle = getArguments();
         ArrayList<Dogadaji> listaDohvacena = bundle.getParcelableArrayList("event");
@@ -94,6 +96,15 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
+            }
+        });
+
+        webLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = dogadajDohvacen.getUrl();
+
+                otvoriUrl(url);
             }
         });
 
@@ -140,6 +151,13 @@ public class DetaljniPrikazFragment extends Fragment implements OnMapReadyCallba
         //Pozicionira i zumirana lokaciju od koordinata
         CameraPosition cameraPosition = new CameraPosition.Builder().target(dogadajKoordinate).zoom(15).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    private void otvoriUrl(String url){
+        if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://" + url;
+        Uri uri = Uri.parse(url);
+        Intent intent= new Intent(Intent.ACTION_VIEW,uri);
+        startActivity(intent);
     }
 
 
