@@ -21,6 +21,7 @@ import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.accountManagement.LoginActivity;
 import com.foi.air1712.instad.fragmenti.PrikazFavoritiFragment;
+import com.foi.air1712.instad.fragmenti.PrikazFavoriziranihFragment;
 import com.foi.air1712.instad.fragmenti.PrikazPostavkeFragment;
 import com.foi.air1712.instad.fragmenti.PrikazSvihFragment;
 import com.foi.air1712.instad.loaders.DbDataLoader;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case R.id.action_item3:
                                 selectedFragment = PrikazPostavkeFragment.newInstance();
+                                break;
+                            case R.id.action_item4:
+                                selectedFragment = PrikazFavoriziranihFragment.newInstance();
                                 break;
                         }
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -10,8 +10,9 @@
 
     <!--za izbornik-->
     <string name="item_1">Početna</string>
-    <string name="item_2">Favoriti</string>
+    <string name="item_2">Lokacije</string>
     <string name="item_3">Postavke</string>
+    <string name="item_4">Favorizirani</string>
     <string name="btn_logout">Logout</string>
     <string name="user_diplay_name">Noname</string>
     <string name="user_mail_info">Email address</string>
