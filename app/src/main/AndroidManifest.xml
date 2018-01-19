@@ -19,12 +19,18 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyA9zf8HQ9caG5ZYX-UjdpRfuEzSzV035wQ" />
 
-        <activity android:name=".MainActivity" />
-        <activity android:name=".PrikazSvihActivity">
-
-        </activity>
-        <activity android:name=".accountManagement.SignUpActivity" />
-        <activity android:name=".accountManagement.LoginActivity">
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PrikazSvihActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".accountManagement.SignUpActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".accountManagement.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

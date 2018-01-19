@@ -49,6 +49,9 @@ public class PrikazFavoriziranihAdapter extends RecyclerView.Adapter<PrikazFavor
     public PrikazFavoriziranihAdapter(List<Dogadaji> dogadaji, Context context){
         this.dogadaji = dogadaji;
         this.context = context;
+        if (dogadaji.size()==0){
+            Toast.makeText(context, "Nema događaja na mjestima koja su u Vašim favoritima!", Toast.LENGTH_SHORT).show();
+        }
     }
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
