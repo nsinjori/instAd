@@ -78,6 +78,24 @@ public class PrikazFavoriziranihAdapter extends RecyclerView.Adapter<PrikazFavor
         dogadajViewHolder.naziv.setText(dogadaji.get(i).getNaziv());
         final Context context = dogadajViewHolder.slika.getContext();
         Picasso.with(context).load(dogadaji.get(i).getSlika()).into(dogadajViewHolder.slika);
+        final int index=i+1;
+        final ArrayList<Dogadaji> dogadajArrayList=new ArrayList<>();
+        dogadajArrayList.add(dogadaji.get(i));
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            dogadajViewHolder.cv.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    Fragment detaljniDogadaj = new DetaljniPrikazFragment();
+                    Bundle bundle = new Bundle();
+                    activity.getSupportFragmentManager().beginTransaction();
+                    bundle.putParcelableArrayList("event", dogadajArrayList);
+                    detaljniDogadaj.setArguments(bundle);
+                    activity.getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.frame_layout, detaljniDogadaj).commit();
+                }
+            });
+        }
     }
     @Override
     public int getItemCount() {
