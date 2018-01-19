@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
+        BottomNavViewHelper.disableShiftMode(bottomNavigationView);
         if(FirebaseAuth.getInstance().getCurrentUser()==null){
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
