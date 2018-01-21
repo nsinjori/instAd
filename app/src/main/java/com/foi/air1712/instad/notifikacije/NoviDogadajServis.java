@@ -1,14 +1,17 @@
 package com.foi.air1712.instad.notifikacije;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
+import com.foi.air1712.instad.MainActivity;
 import com.foi.air1712.instad.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -93,11 +96,18 @@ public class NoviDogadajServis extends Service{
     }
 
     private void notificiraj(Dogadaji dogadaj) {
+
+        Intent noviIntent = new Intent(getBaseContext(), MainActivity.class);
+
+        int uniqueInt = (int) (System.currentTimeMillis() & 0xfffffff);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, uniqueInt, noviIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getBaseContext())
                         .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
                         .setContentTitle("Novi događaj")
                         .setContentText(dogadaj.getNaziv())
+                        .setContentIntent(pendingIntent)
                         .setAutoCancel(true);
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(id, mBuilder.build());

@@ -20,6 +20,7 @@ import com.foi.air1712.core.DataLoadedListener;
 import com.foi.air1712.core.DataLoader;
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.accountManagement.LoginActivity;
+import com.foi.air1712.instad.fragmenti.DetaljniPrikazFragment;
 import com.foi.air1712.instad.fragmenti.PrikazFavoritiFragment;
 import com.foi.air1712.instad.fragmenti.PrikazFavoriziranihFragment;
 import com.foi.air1712.instad.fragmenti.PrikazPostavkeFragment;
@@ -86,5 +87,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Used to select an item programmatically
         //bottomNavigationView.getMenu().getItem(2).setChecked(true);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+
     }
 }
