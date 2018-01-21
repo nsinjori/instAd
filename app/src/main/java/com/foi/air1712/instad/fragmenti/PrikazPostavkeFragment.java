@@ -1,6 +1,7 @@
 package com.foi.air1712.instad.fragmenti;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -104,19 +105,18 @@ public class PrikazPostavkeFragment extends Fragment {
             }
         });
         notificiranje = (Button) view.findViewById(R.id.novi_ev_notify);
+        provjeraServisa();
         notificiranje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(startaniServis){
                     getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
-                    Toast.makeText(getActivity(), "Ugašeni servis", Toast.LENGTH_SHORT).show();
-                    notificiranje.setText("Pokreni servis!");
-                    startaniServis = false;
+                    //Toast.makeText(getActivity(), "Ugašeni servis", Toast.LENGTH_SHORT).show();
+                    provjeraServisa();
                 }else{
                     getContext().startService(new Intent(getContext(),NoviDogadajServis.class));
-                    Toast.makeText(getActivity(), "Pokrenuti servis", Toast.LENGTH_SHORT).show();
-                    startaniServis = true;
-                    notificiranje.setText("Zaustavi servis!");
+                    //Toast.makeText(getActivity(), "Pokrenuti servis", Toast.LENGTH_SHORT).show();
+                    provjeraServisa();
                 }
             }
         });
@@ -269,5 +269,22 @@ public class PrikazPostavkeFragment extends Fragment {
         });
         return view;
     }
-
+    private void provjeraServisa() {
+        if(isMyServiceRunning(NoviDogadajServis.class)){
+            startaniServis = true;
+            notificiranje.setText("Isključi notifikacije!");
+        }else{
+            startaniServis = false;
+            notificiranje.setText("Uključi notifikacije!");
+        }
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) act.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
