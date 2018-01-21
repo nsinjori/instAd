@@ -58,7 +58,6 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
     public PrikazSvihAdapter(List<Dogadaji> dogadaji, Context context){
             this.dogadaji = dogadaji;
             this.context = context;
-            context.startService(new Intent(context,NoviDogadajServis.class));
         }
 
         @Override

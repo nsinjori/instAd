@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.foi.air1712.instad.MainActivity;
 import com.foi.air1712.instad.R;
 import com.foi.air1712.instad.accountManagement.LoginActivity;
+import com.foi.air1712.instad.notifikacije.NoviDogadajServis;
 import com.google.android.gms.internal.zzaap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,6 +57,8 @@ public class PrikazPostavkeFragment extends Fragment {
     private boolean editPasswordActive = false;
     private Button editEmailBtn;
     private boolean editEmailActive = false;
+    private Button notificiranje;
+    private boolean startaniServis;
 
     public static PrikazPostavkeFragment newInstance() {
         PrikazPostavkeFragment fragment = new PrikazPostavkeFragment();
@@ -71,6 +74,7 @@ public class PrikazPostavkeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        startaniServis=false;
         view = inflater.inflate(R.layout.fragment_postavke, container, false);
         act = getActivity();
         pb = view.findViewById(R.id.progressBarUserSettings);
@@ -97,6 +101,23 @@ public class PrikazPostavkeFragment extends Fragment {
                     Toast.makeText(getActivity(), "Nije odlogiran", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+        notificiranje = (Button) view.findViewById(R.id.novi_ev_notify);
+        notificiranje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(startaniServis){
+                    getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
+                    Toast.makeText(getActivity(), "Ugašeni servis", Toast.LENGTH_SHORT).show();
+                    notificiranje.setText("Pokreni servis!");
+                    startaniServis = false;
+                }else{
+                    getContext().startService(new Intent(getContext(),NoviDogadajServis.class));
+                    Toast.makeText(getActivity(), "Pokrenuti servis", Toast.LENGTH_SHORT).show();
+                    startaniServis = true;
+                    notificiranje.setText("Zaustavi servis!");
+                }
             }
         });
         //edit user Display Name

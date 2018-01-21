@@ -122,6 +122,17 @@
             android:layout_below="@id/confirm_pass"/>
     </RelativeLayout>
     <Button
+        android:id="@+id/novi_ev_notify"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:background="@color/cardview_dark_background"
+        android:text="..."
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="15sp"
+        android:layout_below="@id/pass_group"/>
+    <Button
         android:id="@+id/logout_button"
         style="?android:textAppearanceSmall"
         android:layout_width="match_parent"
