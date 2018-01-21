@@ -99,6 +99,21 @@ public class NoviDogadajServis extends Service{
 
         Intent noviIntent = new Intent(getBaseContext(), MainActivity.class);
 
+        Bundle extras = new Bundle();
+        extras.putString("extra_adresa",dogadaj.getAdresa());
+        extras.putString("extra_naziv",dogadaj.getNaziv());
+        extras.putString("extra_hash",dogadaj.getHash());
+        extras.putString("extra_slika",dogadaj.getSlika());
+        extras.putString("extra_opis",dogadaj.getOpis());
+        extras.putString("extra_latitude",dogadaj.getLatitude());
+        extras.putString("extra_longitude",dogadaj.getLongitude());
+        extras.putString("extra_datumkraj",dogadaj.getDatum_kraj());
+        extras.putString("extra_datumpocetka",dogadaj.getDatum_pocetka());
+        extras.putString("extra_objekt",dogadaj.getObjekt());
+        extras.putString("extra_url",dogadaj.getUrl());
+        //extras.putParcelableArrayList("event22", dogadajArrayList);
+        noviIntent.putExtras(extras);
+
         int uniqueInt = (int) (System.currentTimeMillis() & 0xfffffff);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, uniqueInt, noviIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

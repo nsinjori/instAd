@@ -93,6 +93,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+        Bundle extras = intent.getExtras();
+        String extra_adresa = extras.getString("extra_adresa");
+        String extra_naziv = extras.getString("extra_naziv");
+        String extra_hash = extras.getString("extra_hash");
+        String extra_slika = extras.getString("extra_slika");
+        String extra_opis = extras.getString("extra_opis");
+        String extra_latitude = extras.getString("extra_latitude");
+        String extra_longitude = extras.getString("extra_longitude");
+        String extra_datumkraj = extras.getString("extra_datumkraj");
+        String extra_datumpocetka = extras.getString("extra_datumpocetka");
+        String extra_objekt = extras.getString("extra_datumpocetka");
+        String extra_url = extras.getString("extra_datumpocetka");
 
+        Dogadaji izNotifikacije = new Dogadaji();
+        izNotifikacije.setAdresa(extra_adresa);
+        izNotifikacije.setNaziv(extra_naziv);
+        izNotifikacije.setHash(extra_hash);
+        izNotifikacije.setSlika(extra_slika);
+        izNotifikacije.setOpis(extra_opis);
+        izNotifikacije.setLatitude(extra_latitude);
+        izNotifikacije.setLongitude(extra_longitude);
+        izNotifikacije.setDatum_kraj(extra_datumkraj);
+        izNotifikacije.setDatum_pocetka(extra_datumpocetka);
+        izNotifikacije.setObjekt(extra_objekt);
+        izNotifikacije.setUrl(extra_url);
+
+        ArrayList<Dogadaji> dogadajArrayList=new ArrayList<>();
+        dogadajArrayList.add(izNotifikacije);
+
+        Fragment detaljniDogadaj = new DetaljniPrikazFragment();
+        Bundle bundle = new Bundle();
+        this.getSupportFragmentManager().beginTransaction();
+        bundle.putParcelableArrayList("event", dogadajArrayList);
+
+        detaljniDogadaj.setArguments(bundle);
+
+        this.getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.frame_layout, detaljniDogadaj).commit();
     }
 }
