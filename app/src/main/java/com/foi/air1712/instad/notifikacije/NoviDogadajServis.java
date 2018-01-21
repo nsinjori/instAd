@@ -108,4 +108,9 @@ public class NoviDogadajServis extends Service{
     public void onCreate() {
         firstTimeRun = true;
     }
+    @Override
+    public void onDestroy() {
+        ref.removeEventListener(vel);
+        firstTimeRun=true;
+    }
 }

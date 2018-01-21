@@ -94,12 +94,13 @@ public class PrikazPostavkeFragment extends Fragment {
             public void onClick(View view) {
                 firebaseAuth.signOut();
                 if(firebaseAuth.getCurrentUser()==null){
-                    Toast.makeText(getActivity(), "Odlogiran", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Odlogiran", Toast.LENGTH_SHORT).show();
+                    getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                 }else{
-                    Toast.makeText(getActivity(), "Nije odlogiran", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Korisnik je i dalje logiran!", Toast.LENGTH_SHORT).show();
                 }
 
             }
