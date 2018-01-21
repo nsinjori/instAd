@@ -28,6 +28,7 @@ public class NoviDogadajServis extends Service{
     private DatabaseReference ref;
     private ValueEventListener vel;
     private int id = 001;
+    private boolean firstTimeRun;
 
     @Nullable
     @Override
@@ -42,14 +43,18 @@ public class NoviDogadajServis extends Service{
         vel = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                if (!firstTimeRun) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         Dogadaji dogadaj = postSnapshot.getValue(Dogadaji.class);
-                        if(!trenutni.contains(dogadaj.getHash())){
+                        if (!trenutni.contains(dogadaj.getHash())) {
                             notificiraj(dogadaj);
-                            }
-                        trenutni.add(dogadaj.getHash());
                         }
+                        trenutni.add(dogadaj.getHash());
                     }
+                } else {
+                    firstTimeRun = false;
+                }
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
@@ -69,5 +74,10 @@ public class NoviDogadajServis extends Service{
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(id, mBuilder.build());
         id++;
+    }
+
+    @Override
+    public void onCreate() {
+        firstTimeRun = true;
     }
 }
