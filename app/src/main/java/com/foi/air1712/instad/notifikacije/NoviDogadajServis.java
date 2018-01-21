@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Darko on 19.1.2018..
@@ -29,7 +31,8 @@ public class NoviDogadajServis extends Service{
     private ValueEventListener vel;
     private int id = 001;
     private boolean firstTimeRun;
-
+    private FirebaseAuth firebaseAuth;
+    private List<String> favoriti;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -38,7 +41,32 @@ public class NoviDogadajServis extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        favoriti = new ArrayList<>();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        DatabaseReference fav = database.getReference("users").child(firebaseAuth.getCurrentUser().getUid()).child("favs");
+        fav.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                favoriti.clear();
+                if(snapshot!=null) {
+                    Map<String, String> mapData = (Map) snapshot.getValue();
+                    if(mapData!=null) {
+                        for (Map.Entry<String, String> entry : mapData.entrySet()) {
+                            String fav = entry.getKey().toString();
+                            if (!favoriti.contains(fav))
+                                favoriti.add(fav);
+                        }
+                    }
+                }else{
+                    System.out.println("Nema favorita!");
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
+            }
+        });
         ref = database.getReference("noviDogadaji");
         vel = new ValueEventListener() {
             @Override
@@ -46,7 +74,7 @@ public class NoviDogadajServis extends Service{
                 if (!firstTimeRun) {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         Dogadaji dogadaj = postSnapshot.getValue(Dogadaji.class);
-                        if (!trenutni.contains(dogadaj.getHash())) {
+                        if (!trenutni.contains(dogadaj.getHash())&&favoriti.contains(dogadaj.getObjekt())) {
                             notificiraj(dogadaj);
                         }
                         trenutni.add(dogadaj.getHash());
