@@ -1,6 +1,7 @@
 package com.foi.air1712.instad;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.fragmenti.DetaljniPrikazFragment;
+import com.foi.air1712.instad.notifikacije.NoviDogadajServis;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -56,6 +58,7 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
     public PrikazSvihAdapter(List<Dogadaji> dogadaji, Context context){
             this.dogadaji = dogadaji;
             this.context = context;
+            context.startService(new Intent(context,NoviDogadajServis.class));
         }
 
         @Override
