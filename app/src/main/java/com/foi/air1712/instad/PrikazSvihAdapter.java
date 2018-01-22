@@ -34,6 +34,7 @@ import java.util.Locale;
 public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.DogadajViewHolder> {
 
     Dogadaji posalji = new Dogadaji();
+    private List<Dogadaji> mDogadajiModel;
 
 
         public static class DogadajViewHolder extends RecyclerView.ViewHolder {
@@ -148,6 +149,13 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
             notifyDataSetChanged();
 
         }
+
+    public void setFilter(List<Dogadaji> dogadajiModels) {
+        dogadaji = new ArrayList<>();
+        dogadaji.addAll(dogadajiModels);
+        notifyDataSetChanged();
+    }
+
 
 
 }
