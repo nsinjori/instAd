@@ -116,8 +116,7 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
 
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,
-                                "Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context,"Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
 
                         AppCompatActivity activity = (AppCompatActivity) context;
                         Fragment detaljniDogadaj = new DetaljniPrikazFragment();

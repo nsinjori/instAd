@@ -82,7 +82,7 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener, 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"gumbek za mapu", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"gumbek za mapu", Toast.LENGTH_SHORT).show();
 
                 zamijeniFragmente();
             }
@@ -108,11 +108,11 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener, 
         DataLoader dataLoader;
         if(Dogadaji.getAll().isEmpty()){
             System.out.println("Loading web data");
-            Toast.makeText(this.getContext(), "Z neta uzimam", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Z neta uzimam", Toast.LENGTH_SHORT).show();
             dataLoader = new WsDataLoader();
         } else {
             System.out.println("Loading local data");
-            Toast.makeText(this.getContext(), "Lokalno uzimam", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Lokalno uzimam", Toast.LENGTH_SHORT).show();
             dataLoader = new DbDataLoader();
         }
         dataLoader.loadData(this);

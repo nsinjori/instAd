@@ -61,11 +61,11 @@ public class PrikazSvihActivity extends AppCompatActivity implements DataLoadedL
         DataLoader dataLoader;
         if(Dogadaji.getAll().isEmpty()){
             System.out.println("Loading web data");
-            Toast.makeText(this, "Z neta uzimam", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Z neta uzimam", Toast.LENGTH_SHORT).show();
             dataLoader = new WsDataLoader();
         } else {
             System.out.println("Loading local data");
-            Toast.makeText(this, "Lokalno uzimam", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Lokalno uzimam", Toast.LENGTH_SHORT).show();
             dataLoader = new DbDataLoader();
         }
         dataLoader.loadData(this);
