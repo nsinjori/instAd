@@ -43,6 +43,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -294,8 +299,30 @@ public class PrikazPostavkeFragment extends Fragment {
         }else{
             removeLocationAlert();
             Log.i("GEOFENCE", "dodavanje");
-            addLocationAlert(46.30764,16.33857,"Foijo");
-
+            //addLocationAlert(46.30764,16.33857,"Foijo");
+            List<Dogadaji> dogadaji = Dogadaji.getAll();
+            for (Dogadaji dogadaj:dogadaji){
+                String dtStart = dogadaj.getDatum_kraj();
+                String dtPocetak = dogadaj.getDatum_pocetka();
+                Date datumPocetka = new Date();
+                Date date = new Date();
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss");
+                //String reg_date = df.format(c.getTime());
+                c.add(Calendar.DATE, 2);  // number of days to add
+                String end_date = df.format(c.getTime());
+                Date preksutra = new Date();
+                try {
+                    date = new SimpleDateFormat("yyyy-MM-dd").parse(dtStart);
+                    datumPocetka = new SimpleDateFormat("yyyy-MM-dd").parse(dtPocetak);
+                    preksutra = new SimpleDateFormat("yyyy-MM-dd").parse(end_date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if(!date.before(new Date())&&datumPocetka.before(preksutra)){
+                    addLocationAlert(Double.parseDouble(dogadaj.getLatitude()),Double.parseDouble(dogadaj.getLongitude()),dogadaj.getNaziv());
+                }
+            }
         }
     }
 
