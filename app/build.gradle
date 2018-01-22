@@ -9,6 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -36,10 +37,10 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.google.firebase:firebase-auth:10.2.0'
-    compile 'com.google.firebase:firebase-core:10.2.0'
+    compile 'com.google.firebase:firebase-auth:11.6.0'
+    compile 'com.google.firebase:firebase-core:11.6.0'
 
-    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-database:11.6.0'
 
 
     //za bottombar
@@ -50,7 +51,9 @@ dependencies {
     compile 'com.android.support:support-v4:26.1.0'
     //kraj
 
-    compile 'com.google.android.gms:play-services:10.2.0'
+    compile 'com.google.android.gms:play-services:11.6.0'
+    implementation 'com.google.android.gms:play-services-maps:11.6.0'
+    implementation 'com.google.android.gms:play-services-location:11.6.0'
 
     compile project(':database')
     compile project(':core')

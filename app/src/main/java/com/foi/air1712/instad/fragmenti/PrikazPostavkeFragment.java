@@ -1,11 +1,18 @@
 package com.foi.air1712.instad.fragmenti;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +23,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.MainActivity;
 import com.foi.air1712.instad.R;
 import com.foi.air1712.instad.accountManagement.LoginActivity;
+import com.foi.air1712.instad.notifikacije.GeoFenceLocationServis;
+import com.foi.air1712.instad.notifikacije.NoviDogadajServis;
 import com.google.android.gms.internal.zzaap;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -29,6 +43,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -40,6 +59,7 @@ import butterknife.OnClick;
  */
 
 public class PrikazPostavkeFragment extends Fragment {
+    private static final float GEOFENCE_RADIUS = 25;
     @BindView(R.id.progressBarUserSettings)
     ProgressBar pb;
     Button editNameBtn;
@@ -56,6 +76,9 @@ public class PrikazPostavkeFragment extends Fragment {
     private boolean editPasswordActive = false;
     private Button editEmailBtn;
     private boolean editEmailActive = false;
+    private Button notificiranje;
+    private boolean startaniServis;
+    private GeofencingClient geofencingClient;
 
     public static PrikazPostavkeFragment newInstance() {
         PrikazPostavkeFragment fragment = new PrikazPostavkeFragment();
@@ -71,10 +94,13 @@ public class PrikazPostavkeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        startaniServis=false;
         view = inflater.inflate(R.layout.fragment_postavke, container, false);
         act = getActivity();
         pb = view.findViewById(R.id.progressBarUserSettings);
         //show user email address
+        geofencingClient = LocationServices.getGeofencingClient(getActivity());
+        postaviGeofence();
         final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         nameEditText = (EditText) view.findViewById(R.id.user_diplay_name);
         if(currentUser.getDisplayName()!=null){
@@ -89,14 +115,31 @@ public class PrikazPostavkeFragment extends Fragment {
             public void onClick(View view) {
                 firebaseAuth.signOut();
                 if(firebaseAuth.getCurrentUser()==null){
-                    Toast.makeText(getActivity(), "Odlogiran", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Odlogiran", Toast.LENGTH_SHORT).show();
+                    getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                 }else{
-                    Toast.makeText(getActivity(), "Nije odlogiran", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Korisnik je i dalje logiran!", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+        notificiranje = (Button) view.findViewById(R.id.novi_ev_notify);
+        provjeraServisa();
+        notificiranje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(startaniServis){
+                    getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
+                    //Toast.makeText(getActivity(), "Ugašeni servis", Toast.LENGTH_SHORT).show();
+                    provjeraServisa();
+                }else{
+                    getContext().startService(new Intent(getContext(),NoviDogadajServis.class));
+                    //Toast.makeText(getActivity(), "Pokrenuti servis", Toast.LENGTH_SHORT).show();
+                    provjeraServisa();
+                }
             }
         });
         //edit user Display Name
@@ -249,4 +292,117 @@ public class PrikazPostavkeFragment extends Fragment {
         return view;
     }
 
+    private void postaviGeofence() {
+        if(isLocationAccessPermitted()){
+            Log.i("GEOFENCE", "falta permisiona");
+            ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }else{
+            removeLocationAlert();
+            Log.i("GEOFENCE", "dodavanje");
+            //addLocationAlert(46.30764,16.33857,"Foijo");
+            List<Dogadaji> dogadaji = Dogadaji.getAll();
+            for (Dogadaji dogadaj:dogadaji){
+                String dtStart = dogadaj.getDatum_kraj();
+                String dtPocetak = dogadaj.getDatum_pocetka();
+                Date datumPocetka = new Date();
+                Date date = new Date();
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss");
+                //String reg_date = df.format(c.getTime());
+                c.add(Calendar.DATE, 2);  // number of days to add
+                String end_date = df.format(c.getTime());
+                Date preksutra = new Date();
+                try {
+                    date = new SimpleDateFormat("yyyy-MM-dd").parse(dtStart);
+                    datumPocetka = new SimpleDateFormat("yyyy-MM-dd").parse(dtPocetak);
+                    preksutra = new SimpleDateFormat("yyyy-MM-dd").parse(end_date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if(!date.before(new Date())&&datumPocetka.before(preksutra)){
+                    addLocationAlert(Double.parseDouble(dogadaj.getLatitude()),Double.parseDouble(dogadaj.getLongitude()),dogadaj.getNaziv());
+                }
+            }
+        }
+    }
+
+    private void provjeraServisa() {
+        if(isMyServiceRunning(NoviDogadajServis.class)){
+            startaniServis = true;
+            notificiranje.setText("Isključi notifikacije!");
+        }else{
+            startaniServis = false;
+            notificiranje.setText("Uključi notifikacije!");
+        }
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) act.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    @SuppressLint("MissingPermission")
+    public void addLocationAlert(double lat, double lng, final String key){
+        //String key = ""+lat+"-"+lng;
+        Geofence geofence = getGeofence(lat, lng, key);
+        geofencingClient.addGeofences(getGeofencingRequest(geofence),
+                getGeofencePendingIntent())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //Toast.makeText(act, "Location alter has been added" + key, Toast.LENGTH_SHORT).show();
+                        }else{
+                            //Toast.makeText(act, "Location alter could not be added", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+    private void removeLocationAlert(){
+        geofencingClient.removeGeofences(getGeofencePendingIntent())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //Toast.makeText(act, "Location alters have been removed", Toast.LENGTH_SHORT).show();
+                        }else{
+                           // Toast.makeText(act, "Location alters could not be removed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+    private PendingIntent getGeofencePendingIntent() {
+        Intent intent = new Intent(act, GeoFenceLocationServis.class);
+        return PendingIntent.getService(act, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    private GeofencingRequest getGeofencingRequest(Geofence geofence) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.addGeofence(geofence);
+        return builder.build();
+    }
+
+    private Geofence getGeofence(double lat, double lang, String key) {
+        return new Geofence.Builder()
+                .setRequestId(key)
+                .setCircularRegion(lat, lang, GEOFENCE_RADIUS)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_DWELL)
+                .setLoiteringDelay(1000)
+                .build();
+    }
+    private boolean isLocationAccessPermitted(){
+        if (ContextCompat.checkSelfPermission(act,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

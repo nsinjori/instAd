@@ -1,6 +1,7 @@
 package com.foi.air1712.instad;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
 import com.foi.air1712.instad.fragmenti.DetaljniPrikazFragment;
+import com.foi.air1712.instad.notifikacije.NoviDogadajServis;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +34,7 @@ import java.util.Locale;
 public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.DogadajViewHolder> {
 
     Dogadaji posalji = new Dogadaji();
+    private List<Dogadaji> mDogadajiModel;
 
 
         public static class DogadajViewHolder extends RecyclerView.ViewHolder {
@@ -113,8 +116,7 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
 
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,
-                                "Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context,"Kliknul sam: " + dogadaji.get(i).getNaziv(), Toast.LENGTH_LONG).show();
 
                         AppCompatActivity activity = (AppCompatActivity) context;
                         Fragment detaljniDogadaj = new DetaljniPrikazFragment();
@@ -146,6 +148,13 @@ public class PrikazSvihAdapter extends RecyclerView.Adapter<PrikazSvihAdapter.Do
             notifyDataSetChanged();
 
         }
+
+    public void setFilter(List<Dogadaji> dogadajiModels) {
+        dogadaji = new ArrayList<>();
+        dogadaji.addAll(dogadajiModels);
+        notifyDataSetChanged();
+    }
+
 
 
 }

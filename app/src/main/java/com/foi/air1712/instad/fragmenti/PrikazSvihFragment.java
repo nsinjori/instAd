@@ -4,10 +4,15 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -30,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,12 +44,16 @@ import java.util.stream.Collectors;
  */
 
 
-public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
+public class PrikazSvihFragment extends Fragment implements DataLoadedListener, SearchView.OnQueryTextListener{
 
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView rv;
     private ArrayList<Dogadaji> DohvaceniDogadaji;
     private ArrayList<Lokacije> dohvaceneLokacije;
+
+    private List<Dogadaji> mDogadajiModel;
+
+    private PrikazSvihAdapter adapter;
 
     private FloatingActionButton fab;
 
@@ -72,7 +82,7 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"gumbek za mapu", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"gumbek za mapu", Toast.LENGTH_SHORT).show();
 
                 zamijeniFragmente();
             }
@@ -98,14 +108,16 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
         DataLoader dataLoader;
         if(Dogadaji.getAll().isEmpty()){
             System.out.println("Loading web data");
-            Toast.makeText(this.getContext(), "Z neta uzimam", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Z neta uzimam", Toast.LENGTH_SHORT).show();
             dataLoader = new WsDataLoader();
         } else {
             System.out.println("Loading local data");
-            Toast.makeText(this.getContext(), "Lokalno uzimam", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Lokalno uzimam", Toast.LENGTH_SHORT).show();
             dataLoader = new DbDataLoader();
         }
         dataLoader.loadData(this);
+
+        setHasOptionsMenu(true);
 
 
         return rootView;
@@ -116,11 +128,39 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
 
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        // Do something when collapsed
+                        adapter.setFilter(mDogadajiModel);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        // Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
+    }
+
+
     @Override
     public void onDataLoaded(ArrayList<Dogadaji> dogadaji, ArrayList<Lokacije> lokacije) {
         DohvaceniDogadaji = dogadaji;
         dohvaceneLokacije = lokacije;   
         initializeAdapter();
+
 
         System.out.println("Dohvacene lokacije z baze/firebase --> " + dohvaceneLokacije.size());
         swipeContainer.setRefreshing(false);
@@ -156,7 +196,9 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
         azuriraniDogadaji.addAll(hs);
         */
 
-        PrikazSvihAdapter adapter = new PrikazSvihAdapter(azuriraniDogadaji, getContext());
+        mDogadajiModel = azuriraniDogadaji;
+
+        adapter = new PrikazSvihAdapter(azuriraniDogadaji, getContext());
         rv.setAdapter(adapter);
     }
 
@@ -182,5 +224,31 @@ public class PrikazSvihFragment extends Fragment implements DataLoadedListener {
         fragmentTransaction.replace(R.id.frame_layout, newMapaFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<Dogadaji> filteredModelList = filter(mDogadajiModel, newText);
+        adapter.setFilter(filteredModelList);
+        return true;
+    }
+
+    private List<Dogadaji> filter(List<Dogadaji> dogadaji, String query) {
+        query = query.toLowerCase();
+
+        final List<Dogadaji> filteredModelList = new ArrayList<>();
+        for (Dogadaji dogadaj : dogadaji) {
+            final String naziv = dogadaj.getNaziv().toLowerCase();
+            final String objekt = dogadaj.getObjekt().toLowerCase();
+            if (naziv.contains(query) || objekt.contains(query)) {
+                filteredModelList.add(dogadaj);
+            }
+        }
+        return filteredModelList;
     }
 }

@@ -35,7 +35,7 @@ dependencies {
     compile project (':core')
     compile project (':database')
 
-    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-database:11.6.0'
 
 
     //za gson

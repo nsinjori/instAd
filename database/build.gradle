@@ -41,6 +41,6 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
     //za clusteritems
-    compile 'com.google.android.gms:play-services-maps:10.2.0'
+    compile 'com.google.android.gms:play-services-maps:11.6.0'
     compile 'com.google.maps.android:android-maps-utils:0.5+'
 }
