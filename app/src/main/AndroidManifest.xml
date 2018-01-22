@@ -39,6 +39,7 @@
             </intent-filter>
         </activity>
         <service android:name=".notifikacije.NoviDogadajServis" />
+        <service android:name=".notifikacije.GeoFenceLocationServis" />
     </application>
 
 </manifest>
