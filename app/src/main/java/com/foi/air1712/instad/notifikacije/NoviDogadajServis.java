@@ -30,7 +30,7 @@ import java.util.Map;
  * Created by Darko on 19.1.2018..
  */
 
-public class NoviDogadajServis extends Service{
+public class NoviDogadajServis extends Service implements INotifikacija{
     private static List<String> trenutni = new ArrayList<>();
     private DatabaseReference ref;
     private ValueEventListener vel;
@@ -98,7 +98,8 @@ public class NoviDogadajServis extends Service{
         return START_STICKY;
     }
 
-    private void notificiraj(Dogadaji dogadaj) {
+    @Override
+    public void notificiraj(Dogadaji dogadaj) {
 
         Intent noviIntent = new Intent(getBaseContext(), MainActivity.class);
 
