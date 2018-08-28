@@ -3,9 +3,7 @@ package com.foi.air1712.instad.fragmenti;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,16 +18,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
-import com.foi.air1712.instad.MainActivity;
 import com.foi.air1712.instad.R;
 import com.foi.air1712.instad.accountManagement.LoginActivity;
 import com.foi.air1712.instad.notifikacije.GeoFenceLocationServis;
-import com.foi.air1712.instad.notifikacije.NoviDogadajServis;
-import com.google.android.gms.internal.zzaap;
+import com.foi.air1712.instad.notifikacije.IModulNotifikacija;
+import com.foi.air1712.instad.notifikacije.ModulNotifikacija;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -37,7 +33,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,8 +46,6 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Nikola on 7.12.2017..
@@ -79,6 +72,7 @@ public class PrikazPostavkeFragment extends Fragment {
     private Button notificiranje;
     private boolean startaniServis;
     private GeofencingClient geofencingClient;
+    private IModulNotifikacija modulNotifikacija;
 
     public static PrikazPostavkeFragment newInstance() {
         PrikazPostavkeFragment fragment = new PrikazPostavkeFragment();
@@ -89,6 +83,7 @@ public class PrikazPostavkeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        modulNotifikacija =  new ModulNotifikacija();
     }
 
     @Override
@@ -116,7 +111,12 @@ public class PrikazPostavkeFragment extends Fragment {
                 firebaseAuth.signOut();
                 if(firebaseAuth.getCurrentUser()==null){
                     //Toast.makeText(getActivity(), "Odlogiran", Toast.LENGTH_SHORT).show();
-                    getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
+                    //getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
+
+                    //<Novi kod>
+                    modulNotifikacija.stop(getContext());
+                    //</Novi kod>
+
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                     getActivity().finish();
@@ -132,11 +132,21 @@ public class PrikazPostavkeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(startaniServis){
-                    getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
+                    //getContext().stopService(new Intent(getContext(),NoviDogadajServis.class));
+
+                    //<Novi kod>
+                    modulNotifikacija.stop(getContext());
+                    //</Novi kod>
+
                     //Toast.makeText(getActivity(), "Ugašeni servis", Toast.LENGTH_SHORT).show();
                     provjeraServisa();
                 }else{
-                    getContext().startService(new Intent(getContext(),NoviDogadajServis.class));
+                    //getContext().startService(new Intent(getContext(),NoviDogadajServis.class));
+
+                    //<Novi kod>
+                    modulNotifikacija.start(getContext());
+                    //</Novi kod>
+
                     //Toast.makeText(getActivity(), "Pokrenuti servis", Toast.LENGTH_SHORT).show();
                     provjeraServisa();
                 }
@@ -176,7 +186,7 @@ public class PrikazPostavkeFragment extends Fragment {
                         pb.setVisibility(View.INVISIBLE);
                         Toast.makeText(getActivity(),"Saving failed! Empty field", Toast.LENGTH_SHORT).show();
                         if(currentUser.getDisplayName()!=null)
-                        nameEditText.setText(currentUser.getDisplayName());
+                            nameEditText.setText(currentUser.getDisplayName());
                     }
 
                     nameEditText.setEnabled(false);
@@ -320,30 +330,42 @@ public class PrikazPostavkeFragment extends Fragment {
                     e.printStackTrace();
                 }
                 if(!date.before(new Date())&&datumPocetka.before(preksutra)){
-                    addLocationAlert(Double.parseDouble(dogadaj.getLatitude()),Double.parseDouble(dogadaj.getLongitude()),dogadaj.getNaziv());
+                    addLocationAlert(Double.parseDouble(dogadaj.getLatitude()),Double.parseDouble(dogadaj.getLongitude()),dogadaj.getHash());
                 }
             }
         }
     }
 
     private void provjeraServisa() {
-        if(isMyServiceRunning(NoviDogadajServis.class)){
+        //if(isMyServiceRunning(NoviDogadajServis.class)){
+        //    startaniServis = true;
+        //    notificiranje.setText("Isključi notifikacije!");
+        //}else{
+        //   startaniServis = false;
+        //    notificiranje.setText("Uključi notifikacije!");
+        //}
+
+        //<Novi kod>
+        if(modulNotifikacija.getIsRunning(act)){
             startaniServis = true;
             notificiranje.setText("Isključi notifikacije!");
         }else{
             startaniServis = false;
             notificiranje.setText("Uključi notifikacije!");
         }
+        //</Novi kod>
     }
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) act.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+    //vise nije potrebno
+    //private boolean isMyServiceRunning(Class<?> serviceClass) {
+    //    ActivityManager manager = (ActivityManager) act.getSystemService(Context.ACTIVITY_SERVICE);
+    //    for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+    //        if (serviceClass.getName().equals(service.service.getClassName())) {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
     @SuppressLint("MissingPermission")
     public void addLocationAlert(double lat, double lng, final String key){
         //String key = ""+lat+"-"+lng;
@@ -369,7 +391,7 @@ public class PrikazPostavkeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             //Toast.makeText(act, "Location alters have been removed", Toast.LENGTH_SHORT).show();
                         }else{
-                           // Toast.makeText(act, "Location alters could not be removed", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(act, "Location alters could not be removed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

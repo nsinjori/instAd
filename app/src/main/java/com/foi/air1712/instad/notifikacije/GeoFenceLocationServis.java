@@ -23,10 +23,11 @@ import java.util.List;
 
 public class GeoFenceLocationServis extends IntentService {
     private static final String IDENTIFIER = "LocationAlertServis";
-    private int id=0101;
+
     public GeoFenceLocationServis() {
         super(IDENTIFIER);
     }
+    INotifikacija notifikacija;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -46,7 +47,8 @@ public class GeoFenceLocationServis extends IntentService {
         String string ="";
         for (Geofence geofence : triggeringGeofences) {
             string = geofence.getRequestId();
-            notificiraj(string);
+            notifikacija = new NearEventNotification(getBaseContext());
+            notifikacija.notificiraj(Dogadaji.getDogadajByHash(string));
         }
     }
     private String getErrorString(int errorCode) {
@@ -61,15 +63,10 @@ public class GeoFenceLocationServis extends IntentService {
                 return "geofence error";
         }
     }
-    private void notificiraj(String dogadaj) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getBaseContext())
-                        .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
-                        .setContentTitle("Događaj u blizini!")
-                        .setContentText(dogadaj)
-                        .setAutoCancel(true);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(id, mBuilder.build());
-        id++;
+    /*
+    @Override
+    public void notificiraj(Dogadaji dogadaj) {
+
     }
+    */
 }

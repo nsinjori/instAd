@@ -203,6 +203,14 @@ public class Dogadaji extends BaseModel implements Parcelable {
         this.datum_pocetka = datum_pocetka;
     }
 
+    public static Dogadaji getDogadajByHash(String hash){
+        Dogadaji d = new Dogadaji();
+        for(Dogadaji dogadaj:getAll()){
+            if(dogadaj.getHash().equals(hash)) d = dogadaj;
+        }
+        return d;
+    }
+
     public static List<Dogadaji> getAll(){
         return SQLite.select().from(Dogadaji.class).queryList();
     }
