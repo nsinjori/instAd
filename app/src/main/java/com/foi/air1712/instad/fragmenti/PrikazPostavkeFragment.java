@@ -330,7 +330,7 @@ public class PrikazPostavkeFragment extends Fragment {
                     e.printStackTrace();
                 }
                 if(!date.before(new Date())&&datumPocetka.before(preksutra)){
-                    addLocationAlert(Double.parseDouble(dogadaj.getLatitude()),Double.parseDouble(dogadaj.getLongitude()),dogadaj.getNaziv());
+                    addLocationAlert(Double.parseDouble(dogadaj.getLatitude()),Double.parseDouble(dogadaj.getLongitude()),dogadaj.getHash());
                 }
             }
         }

@@ -47,7 +47,7 @@ public class GeoFenceLocationServis extends IntentService {
         String string ="";
         for (Geofence geofence : triggeringGeofences) {
             string = geofence.getRequestId();
-            notifikacija = new AlertOnlyNotification(getBaseContext());
+            notifikacija = new NearEventNotification(getBaseContext());
             notifikacija.notificiraj(Dogadaji.getDogadajByHash(string));
         }
     }
