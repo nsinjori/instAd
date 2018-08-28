@@ -1,8 +1,10 @@
 package com.foi.air1712.instad.notifikacije;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -36,6 +38,7 @@ public class NoviDogadajServis extends Service{
     private boolean firstTimeRun;
     private FirebaseAuth firebaseAuth;
     private List<String> favoriti;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
