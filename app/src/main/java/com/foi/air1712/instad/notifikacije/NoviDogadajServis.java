@@ -1,20 +1,11 @@
 package com.foi.air1712.instad.notifikacije;
 
-import android.app.ActivityManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.foi.air1712.database.Dogadaji;
-import com.foi.air1712.instad.MainActivity;
-import com.foi.air1712.instad.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,15 +21,15 @@ import java.util.Map;
  * Created by Darko on 19.1.2018..
  */
 
-public class NoviDogadajServis extends Service implements INotifikacija{
+public class NoviDogadajServis extends Service{
     private static List<String> trenutni = new ArrayList<>();
     private DatabaseReference ref;
     private ValueEventListener vel;
-    private int id = 001;
+
     private boolean firstTimeRun;
     private FirebaseAuth firebaseAuth;
     private List<String> favoriti;
-
+    private INotifikacija notifikacija;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,6 +38,7 @@ public class NoviDogadajServis extends Service implements INotifikacija{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        notifikacija = new ClickableNotification(getBaseContext());
         favoriti = new ArrayList<>();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -81,7 +73,7 @@ public class NoviDogadajServis extends Service implements INotifikacija{
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         Dogadaji dogadaj = postSnapshot.getValue(Dogadaji.class);
                         if (!trenutni.contains(dogadaj.getHash())&&favoriti.contains(dogadaj.getObjekt())) {
-                            notificiraj(dogadaj);
+                            notifikacija.notificiraj(dogadaj);
                         }
                         trenutni.add(dogadaj.getHash());
                     }
@@ -96,41 +88,6 @@ public class NoviDogadajServis extends Service implements INotifikacija{
         };
         ref.addValueEventListener(vel);
         return START_STICKY;
-    }
-
-    @Override
-    public void notificiraj(Dogadaji dogadaj) {
-
-        Intent noviIntent = new Intent(getBaseContext(), MainActivity.class);
-
-        Bundle extras = new Bundle();
-        extras.putString("extra_adresa",dogadaj.getAdresa());
-        extras.putString("extra_naziv",dogadaj.getNaziv());
-        extras.putString("extra_hash",dogadaj.getHash());
-        extras.putString("extra_slika",dogadaj.getSlika());
-        extras.putString("extra_opis",dogadaj.getOpis());
-        extras.putString("extra_latitude",dogadaj.getLatitude());
-        extras.putString("extra_longitude",dogadaj.getLongitude());
-        extras.putString("extra_datumkraj",dogadaj.getDatum_kraj());
-        extras.putString("extra_datumpocetka",dogadaj.getDatum_pocetka());
-        extras.putString("extra_objekt",dogadaj.getObjekt());
-        extras.putString("extra_url",dogadaj.getUrl());
-        //extras.putParcelableArrayList("event22", dogadajArrayList);
-        noviIntent.putExtras(extras);
-
-        int uniqueInt = (int) (System.currentTimeMillis() & 0xfffffff);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, uniqueInt, noviIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getBaseContext())
-                        .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
-                        .setContentTitle("Novi događaj")
-                        .setContentText(dogadaj.getNaziv())
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(id, mBuilder.build());
-        id++;
     }
 
     @Override
